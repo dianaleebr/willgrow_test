@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width, initial-scale=1.0">
+<title>윌그로우 영어 성취도 평가</title>
+<link rel="preconnect"href="https://fonts.googleapis.com">
+<link rel="stylesheet"href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Nunito:wght@600;700;800&display=swap">
+<style>
+:root{
+ --blue:#1C5FA6; --blue-d:#154a82; --blue-l:#E8F0FA;
+ --amber:#F0A500; --amber-l:#FFF4D6;
+ --green:#2E9E6B; --green-l:#E6F5EC;
+ --purple:#7C3AED; --purple-l:#F1EAFE;
+ --red:#D64545; --red-l:#FDECEC;
+ --bg:#F5F7FA; --card:#FFFFFF; --border:#E3E8EF;
+ --text:#1F2933; --text2:#52606D; --text3:#8A94A6;
+ --radius:14px; --shadow:0 2px 12px rgba(20,40,80,.06);
+ --font:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+ --font-en:'Nunito','Noto Sans KR',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:inherit}
+input,select,textarea{font-family:inherit;font-size:15px;color:var(--text)}
+u{text-decoration:underline;text-underline-offset:3px;font-weight:700}
+.hidden{display:none!important}
+
+/* ── 상단 바 ── */
+.topbar{position:sticky;top:0;z-index:50;background:var(--card);border-bottom:1px solid var(--border);height:58px;display:flex;align-items:center;padding:0 20px;gap:14px}
+.topbar .brand{font-family:var(--font-en);font-weight:800;font-size:17px;color:var(--blue);letter-spacing:.2px;display:flex;align-items:center;gap:8px}
+.topbar .brand small{font-family:var(--font);font-weight:500;color:var(--text3);font-size:12px}
+.topbar .spacer{flex:1}
+.topbar .pill{font-size:12px;padding:4px 10px;border-radius:99px;background:var(--blue-l);color:var(--blue);font-weight:700}
+.topbar .timer{font-family:var(--font-en);font-weight:800;font-size:18px;color:var(--blue);background:var(--blue-l);padding:4px 14px;border-radius:99px;font-variant-numeric:tabular-nums}
+.topbar .timer.warn{color:#fff;background:var(--red);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.55}}
+
+.wrap{max-width:960px;margin:0 auto;padding:28px 20px 80px}
+.wrap.narrow{max-width:640px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+.card+.card{margin-top:16px}
+h1{font-size:26px;font-weight:900;letter-spacing:-.3px;text-wrap:balance}
+h2{font-size:19px;font-weight:700}
+h3{font-size:15px;font-weight:700;color:var(--text2);letter-spacing:.3px}
+.muted{color:var(--text3);font-size:13px}
+.eyebrow{font-family:var(--font-en);font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:10px;font-weight:700;font-size:15px;transition:.15s;border:1px solid transparent}
+.btn.primary{background:var(--blue);color:#fff}
+.btn.primary:hover{background:var(--blue-d)}
+.btn.amber{background:var(--amber);color:#3a2a00}
+.btn.ghost{background:var(--card);border-color:var(--border);color:var(--text2)}
+.btn.ghost:hover{border-color:var(--blue);color:var(--blue)}
+.btn.danger{background:var(--red-l);color:var(--red)}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:8px}
+.btn.lg{padding:15px 30px;font-size:17px;border-radius:12px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+
+/* ── 랜딩 ── */
+.landing{min-height:calc(100vh - 58px);display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.landing-inner{width:100%;max-width:820px;text-align:center}
+.landing h1{font-size:34px;margin:12px 0 8px}
+.landing p{color:var(--text2);margin-bottom:34px}
+.mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.mode-card{background:var(--card);border:2px solid var(--border);border-radius:20px;padding:30px 24px;text-align:left;transition:.15s;cursor:pointer}
+.mode-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 8px 24px rgba(28,95,166,.12)}
+.mode-card .ic{font-size:36px;margin-bottom:12px}
+.mode-card h2{margin-bottom:6px}
+.mode-card p{margin:0;font-size:13px;color:var(--text3)}
+.level-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px}
+.level-strip div{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:12px;color:var(--text2)}
+.level-strip b{display:block;font-size:14px;color:var(--text)}
+
+/* ── 폼 ── */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:13px;font-weight:700;color:var(--text2)}
+.field input,.field select,.field textarea{padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;background:#fff;transition:.15s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-l)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.field-row{grid-template-columns:1fr}}
+
+/* ── 시험 화면 ── */
+.progress{height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin:6px 0 20px}
+.progress i{display:block;height:100%;background:var(--blue);border-radius:99px;transition:width .3s}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.section-head .step{font-family:var(--font-en);font-weight:800;color:var(--amber);font-size:12px;letter-spacing:1.5px}
+.q{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;scroll-margin-top:80px}
+.q.unans{border-color:#F3C56B;background:#FFFBF0}
+.q .qn{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:8px;background:var(--blue);color:#fff;font-family:var(--font-en);font-weight:800;font-size:14px;margin-right:10px;vertical-align:middle}
+.q .inst{font-size:13px;color:var(--text2);margin-bottom:8px;font-weight:500}
+.q .stem{font-size:17px;line-height:1.7;margin:6px 0 12px;font-family:var(--font-en);font-weight:600}
+.q .stem.ko{font-family:var(--font);font-weight:500}
+.q .stem .prompt{display:inline-block;background:var(--blue-l);border-radius:8px;padding:6px 12px;font-family:var(--font-en);font-weight:700;color:var(--blue-d)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;background:#fff;transition:.12s;font-family:var(--font-en);font-weight:600;font-size:15px}
+.opt:hover{border-color:var(--blue)}
+.opt.sel{border-color:var(--blue);background:var(--blue-l);color:var(--blue-d)}
+.opt .k{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;background:#fff}
+.opt.sel .k{background:var(--blue);color:#fff;border-color:var(--blue)}
+.opt input{display:none}
+.opt.ko{font-family:var(--font);font-weight:500}
+.passage{background:#FBFCFE;border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:12px;padding:20px 22px;margin:18px 0 12px;font-family:var(--font-en);font-size:16px;line-height:1.85;font-weight:600;color:#2a3442}
+.passage .pt{font-family:var(--font-en);font-weight:800;color:var(--blue);font-size:13px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.poster{background:#fff;border:2px dashed var(--amber);border-radius:12px;padding:16px 18px;line-height:1.9}
+.q textarea,.q input.ans{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-en);font-weight:600;font-size:16px;background:#fff}
+.q textarea{min-height:110px;resize:vertical;line-height:1.6}
+.q textarea:focus,.q input.ans:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-l)}
+.exam-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px;flex-wrap:wrap}
+.chip{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700;background:var(--blue-l);color:var(--blue)}
+.chip.amber{background:var(--amber-l);color:#8a5b00}
+.chip.green{background:var(--green-l);color:var(--green)}
+.chip.red{background:var(--red-l);color:var(--red)}
+.chip.purple{background:var(--purple-l);color:var(--purple)}
+.chip.gray{background:#EEF1F5;color:var(--text2)}
+
+.level-badge{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:14px;color:#fff;font-weight:800;font-size:20px;font-family:var(--font-en)}
+.level-badge small{font-family:var(--font);font-weight:500;font-size:13px;opacity:.9}
+.bigcenter{text-align:center;padding:30px 10px}
+.bigcenter .emo{font-size:60px;line-height:1;margin-bottom:12px}
+
+/* ── 교사 모드 ── */
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.tab{padding:10px 16px;font-weight:700;color:var(--text3);border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tab.active{color:var(--blue);border-color:var(--blue)}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px}
+table.tbl th{font-size:11px;letter-spacing:.5px;color:var(--text3);text-align:left;padding:8px 10px;border-bottom:2px solid var(--border);font-weight:700;white-space:nowrap}
+table.tbl td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle;font-variant-numeric:tabular-nums}
+table.tbl tr:hover td{background:#FAFBFD}
+.tbl-wrap{overflow-x:auto}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.toolbar input,.toolbar select{padding:8px 12px;border:1.5px solid var(--border);border-radius:8px}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.stat .l{font-size:11px;color:var(--text3);font-weight:700;letter-spacing:.5px}
+.stat .v{font-size:24px;font-weight:900;font-family:var(--font-en);color:var(--blue)}
+.empty{padding:40px;text-align:center;color:var(--text3)}
+
+/* 지면 답안 입력 */
+.entry-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.en-row{display:flex;align-items:center;gap:4px;border:1px solid var(--border);border-radius:8px;padding:4px 6px;background:#fff}
+.en-row .no{font-family:var(--font-en);font-weight:800;font-size:12px;min-width:22px;color:var(--text2)}
+.en-row button{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);font-size:12px;font-weight:700;color:var(--text2);background:#fff}
+.en-row button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.en-w{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
+.en-w label{font-size:12px;color:var(--text2)}
+.en-w input,.en-w textarea{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-en)}
+/* 학생별 보기 */
+.seg{display:inline-flex;border:1.5px solid var(--border);border-radius:9px;overflow:hidden;background:#fff}
+.seg button{padding:7px 14px;font-size:13px;font-weight:700;color:var(--text2)}
+.seg button.on{background:var(--blue);color:#fff}
+.stu-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;margin-bottom:12px}
+.stu-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;cursor:pointer}
+.stu-head .nm{font-size:17px;font-weight:800}
+.stu-head .meta{font-size:12px;color:var(--text3)}
+.stu-head .kpi{display:flex;gap:18px;margin-left:auto;font-size:12px;color:var(--text2);align-items:center}
+.stu-head .kpi b{font-size:16px;color:var(--text);font-family:var(--font-en)}
+.stu-body{margin-top:12px;border-top:1px solid var(--border);padding-top:12px}
+.stu-body .tbl td,.stu-body .tbl th{padding:8px 8px}
+/* 인쇄용 시험지 */
+.paper{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:32px 36px;max-width:820px;margin:0 auto}
+.paper h1{font-size:22px;text-align:center}
+.paper .ph{text-align:center;border-bottom:2px solid #222;padding-bottom:12px;margin-bottom:6px}
+.paper .info{display:flex;gap:24px;justify-content:center;font-size:13px;margin:10px 0 22px;color:var(--text2)}
+.paper .sec{font-weight:800;font-size:15px;background:#F1F4F8;padding:8px 12px;border-radius:8px;margin:22px 0 10px}
+.paper .pq{margin:0 0 12px;padding:0 0 10px;border-bottom:1px dashed var(--border);break-inside:avoid}
+.paper .pq .inst{font-size:12px;color:var(--text2)}
+.paper .pq .stem{font-family:var(--font-en);font-weight:600;font-size:15px;margin:4px 0}
+.paper .popts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;font-family:var(--font-en);font-size:14px}
+.paper .popts.ko{grid-template-columns:1fr 1fr;font-family:var(--font)}
+.paper .ans{color:var(--red);font-weight:700;font-size:12px}
+.paper .wline{border-bottom:1px solid #999;height:26px;margin-top:6px}
+.paper .passage{font-size:14px;padding:14px 16px}
+
+/* ── 성적표 ── */
+.report{background:#fff;max-width:860px;margin:0 auto;border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.rp-head{background:linear-gradient(135deg,var(--blue) 0%,#2b7bd1 100%);color:#fff;padding:28px 34px}
+.rp-head .eyebrow{color:#FFD766}
+.rp-head h1{font-size:26px;color:#fff;margin:4px 0 14px}
+.rp-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.rp-meta > div{background:rgba(255,255,255,.12);border-radius:10px;padding:10px 12px}
+.rp-meta .l{font-size:11px;opacity:.8}
+.rp-meta .v{font-weight:700;font-size:15px}
+.rp-body{padding:26px 34px}
+.rp-sec{margin-bottom:30px;break-inside:avoid}
+.rp-sec h2{font-size:17px;border-left:5px solid var(--amber);padding-left:10px;margin-bottom:14px}
+.rp-sec h3{margin:14px 0 8px;color:var(--text)}
+.summary-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:16px}
+@media(max-width:700px){.summary-grid{grid-template-columns:1fr}}
+.score-hero{background:var(--blue-l);border-radius:14px;padding:22px;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.score-hero .num{font-family:var(--font-en);font-size:64px;font-weight:800;color:var(--blue);line-height:1}
+.score-hero .lv{font-size:20px;font-weight:900;margin-top:8px}
+.score-hero .lv small{display:block;font-size:12px;font-weight:500;color:var(--text2)}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kv > div{background:#FAFBFD;border:1px solid var(--border);border-radius:12px;padding:12px 14px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+.kv .l{font-size:12px;color:var(--text2);font-weight:700;line-height:1.4}
+.kv .v{font-size:19px;font-weight:900;color:var(--amber);margin-top:4px}
+.kv .v.blue{color:var(--blue)}
+.kv .v small{display:block;font-size:12px;color:var(--text2);font-weight:500}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.metric{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.metric .l{font-size:12px;color:var(--text2);font-weight:700;line-height:1.4;min-height:34px}
+.metric .v{font-size:20px;font-weight:900;color:var(--amber);margin-top:6px;font-family:var(--font-en)}
+.metric .v .ko{font-family:var(--font);font-size:16px;color:var(--amber);font-weight:900}
+.metric .v small{display:block;font-size:12px;color:var(--text2);font-weight:500;font-family:var(--font)}
+.dom-table{width:100%;border-collapse:collapse;font-size:13px}
+.dom-table th{font-size:11px;color:var(--text3);padding:6px 8px;border-bottom:2px solid var(--border);text-align:left}
+.dom-table td{padding:9px 8px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
+.bar{height:10px;background:#EEF1F5;border-radius:99px;overflow:hidden;min-width:90px}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--blue)}
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.chart-grid{grid-template-columns:1fr}}
+.chart-box{border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.chart-box .t{font-weight:700;font-size:13px;margin-bottom:4px}
+.legend{display:flex;gap:14px;font-size:11px;color:var(--text2);margin-top:6px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.hbar-row{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:center;margin-bottom:9px;font-size:12px}
+.hbar-row .lbl{color:var(--text2);font-weight:600;text-align:right;line-height:1.3}
+.hbar{display:flex;flex-direction:column;gap:3px}
+.hbar div{height:13px;border-radius:3px;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:flex-end;padding-right:5px;min-width:26px;font-family:var(--font-en)}
+.hbar .me{background:var(--amber)}
+.hbar .avg{background:#5B8DD9}
+.hbar .none{background:#E3E8EF;color:var(--text3)}
+.weak-list{display:grid;gap:8px;grid-template-columns:1fr 1fr}
+@media(max-width:700px){.weak-list{grid-template-columns:1fr}}
+.weak{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:#FFFBF3}
+.weak .n{font-family:var(--font-en);font-weight:800;color:var(--amber);min-width:26px}
+.weak b{display:block;font-size:14px}
+.weak span{font-size:12px;color:var(--text2)}
+.presc{display:grid;gap:10px}
+.presc-item{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:14px 16px;border:1px solid var(--border);border-radius:10px;font-size:13.5px;line-height:1.75;color:var(--text)}
+.presc-item .n{font-family:var(--font-en);font-weight:800;color:var(--blue);font-size:15px}
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.plan-week{border:1px solid var(--border);border-radius:12px;padding:14px;background:#FAFBFD}
+.plan-week .w{font-family:var(--font-en);font-weight:800;color:var(--amber);font-size:12px;letter-spacing:1px}
+.plan-week b{display:block;margin:4px 0 8px;font-size:14px}
+.plan-week ul{padding-left:16px;font-size:12.5px;color:var(--text2);line-height:1.7}
+.taglist{display:flex;flex-wrap:wrap;gap:6px}
+.taglist span{padding:5px 11px;border-radius:8px;background:var(--red-l);color:var(--red);font-size:12.5px;font-weight:700}
+.taglist span.ok{background:var(--green-l);color:var(--green)}
+.free-box{background:#FAFBFD;border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-family:var(--font-en);font-weight:600;white-space:pre-wrap;line-height:1.7}
+.ai-note{font-size:11px;color:var(--text3);margin-top:8px}
+.rp-foot{background:#F5F7FA;padding:14px 34px;font-size:11px;color:var(--text3);text-align:center;line-height:1.6}
+.report-actions{display:flex;gap:10px;justify-content:center;margin:0 auto 18px;max-width:860px;flex-wrap:wrap}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* 모달 */
+.overlay{position:fixed;inset:0;background:rgba(15,25,40,.5);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:26px;width:440px;max-width:100%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal h2{margin-bottom:14px}
+.modal .foot{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1F2933;color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;z-index:200;opacity:0;transition:.25s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* ── 페이지 내 인쇄 모드 (팝업 차단 대응) ── */
+#print-area{display:none}
+body.print-mode > *:not(#print-area){display:none!important}
+body.print-mode{background:#fff}
+body.print-mode #print-area{display:block;max-width:820px;margin:0 auto;padding:16px 20px 40px}
+.pp-bar{position:sticky;top:0;background:#FFF4D6;border:1px solid #F3C56B;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:5}
+.pp-body{font-family:var(--font);color:#111;font-size:13px;line-height:1.55}
+.pp-body h1{font-size:20px;text-align:center;font-weight:900}
+.pp-body .ph{text-align:center;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:6px}
+.pp-body .muted{color:#666;font-size:12px}
+.pp-body .info{display:flex;gap:22px;justify-content:center;font-size:13px;margin:8px 0 16px}
+.pp-body .sec{font-weight:800;font-size:14px;background:#EEF1F5;padding:6px 10px;border-radius:4px;margin:16px 0 8px}
+.pp-body .pq{margin:0 0 9px;padding:0 0 8px;border-bottom:1px dashed #ccc;break-inside:avoid}
+.pp-body .pq .inst{font-size:12px;color:#444}
+.pp-body .pq .stem{font-family:var(--font-en);font-weight:600;font-size:14px;margin:3px 0}
+.pp-body .popts{display:grid;grid-template-columns:repeat(4,1fr);gap:4px 10px;font-family:var(--font-en);font-size:13px;margin-top:3px}
+.pp-body .popts.ko{grid-template-columns:1fr 1fr;font-family:var(--font)}
+.pp-body .ans{color:#C0392B;font-weight:700;font-size:12px;margin-top:2px}
+.pp-body .wline{border-bottom:1px solid #888;height:22px;margin-top:4px}
+.pp-body .passage{background:#fff;border:1px solid #bbb;border-left:4px solid #F0A500;border-radius:6px;padding:12px 14px;margin:12px 0 8px;font-family:var(--font-en);font-size:13.5px;line-height:1.75;font-weight:600;break-inside:avoid}
+.pp-body .passage .pt{font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#1C5FA6;margin-bottom:4px}
+.pp-body .poster{border:2px dashed #F0A500;border-radius:8px;padding:10px 14px;line-height:1.8}
+.pp-body .omr-wrap{display:flex;gap:18px;justify-content:center;align-items:flex-start;margin:10px 0 12px}
+.pp-body .omr{border-collapse:collapse;font-family:var(--font-en);font-size:13px}
+.pp-body .omr th{background:#EEF1F5;border:1px solid #999;padding:4px 8px;font-size:11px}
+.pp-body .omr td{border:1px solid #999;padding:1px 7px;text-align:center}
+.pp-body .omr td.no{font-weight:800;background:#FAFAFA;min-width:34px}
+.pp-body .omr td.bub{font-size:15px;color:#555;min-width:30px}
+.pp-body .score-box{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:20px;padding:10px;border:2px solid #111;border-radius:6px;font-size:14px}
+@media print{
+ body.print-mode #print-area{max-width:none;padding:0}
+ .pp-body .sec.pb{break-before:page}
+ .pp-body .sec,.pp-body .omr th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+@media print{
+ body{background:#fff}
+ .topbar,.report-actions,.no-print,.toast{display:none!important}
+ .wrap{padding:0;max-width:none}
+ .report{border:none;border-radius:0;max-width:none}
+ .rp-head{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .rp-sec{break-inside:avoid}
+ .paper{border:none;padding:0}
+ @page{margin:14mm}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+ <div class="brand" onclick="goHome()" style="cursor:pointer">WILLGROW <small>영어 성취도 평가</small></div>
+ <div class="spacer"></div>
+ <span id="tb-student" class="pill hidden"></span>
+ <span id="tb-timer" class="timer hidden">10:00</span>
+ <button id="tb-home" class="btn ghost sm hidden" onclick="goHome()">처음으로</button>
+</div>
+
+<!-- ───────── 랜딩 ───────── -->
+<section id="scr-landing" class="landing">
+ <div class="landing-inner">
+  <div class="eyebrow">Willgrow Geoje Campus</div>
+  <h1>영어 성취도 평가</h1>
+  <p>Pre-test 또는 선생님이 정해 준 시험지(Test 1 · 2 · 3)를 선택해 응시합니다.<br>어휘 · 문법 · 독해 · 라이팅 4개 영역을 평가합니다.</p>
+  <div class="mode-grid">
+   <div class="mode-card" onclick="showScreen('info')">
+    <div class="ic"></div>
+    <h2>시험 응시하기</h2>
+    <p>학생용 · 4개 영역 약 40분</p>
+   </div>
+   <div class="mode-card" onclick="openTeacher()">
+    <div class="ic"></div>
+    <h2>교사 모드</h2>
+    <p>응시 결과 · 상세 성적표 · 인쇄용 시험지 · 설정</p>
+   </div>
+  </div>
+  <div class="level-strip">
+   <div><b>Test 1 · 초등 기초</b> 초1~초3 · 교육과정 초3~4학년군</div>
+   <div><b>Test 2 · 초등 심화</b> 초4~초6 · 교육과정 초5~6학년군</div>
+   <div><b>Test 3 · 중등</b> 중1~중2 · 최고 난이도 중2 수준</div>
+  </div>
+ </div>
+</section>
+
+<!-- ───────── 학생 정보 ───────── -->
+<section id="scr-info" class="wrap narrow hidden">
+ <div class="card">
+  <div class="eyebrow">Step 1</div>
+  <h1 style="margin:4px 0 6px">응시자 정보</h1>
+  <p class="muted" style="margin-bottom:20px">정보를 입력하고 선생님이 알려 준 시험지를 고른 뒤 시작합니다.</p>
+  <div class="field"><label>이름 *</label><input id="in-name" placeholder="예) 김민준" autocomplete="off"></div>
+  <div class="field-row">
+   <div class="field"><label>학년 *</label>
+    <select id="in-grade">
+     <option value="">선택</option>
+     <option>초1</option><option>초2</option><option>초3</option><option>초4</option><option>초5</option><option>초6</option><option>중1</option>
+    </select></div>
+   <div class="field"><label>학교</label><input id="in-school" placeholder="예) 수월초"></div>
+  </div>
+  <div class="field-row">
+   <div class="field"><label>현재 교재 반 (선택)</label>
+    <select id="in-class"><option value="">선택</option><option>Climber</option><option>Explorer</option><option>Navigator</option></select></div>
+   <div class="field"><label>응시일</label><input id="in-date" type="date"></div>
+  </div>
+  <div class="field"><label>시험지 *</label>
+   <select id="in-level"><option value="">선택</option><option value="pre">Pre-test · 어휘 15문항 (시험지 배정용)</option><option value="1">Test 1 · 초등 기초</option><option value="2">Test 2 · 초등 심화</option><option value="3">Test 3 · 중등</option></select></div>
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+   <button class="btn ghost" onclick="goHome()">취소</button>
+   <button class="btn primary lg" onclick="startExam()">시험 시작 →</button>
+  </div>
+ </div>
+</section>
+
+<!-- ───────── 안내 ───────── -->
+<section id="scr-intro" class="wrap narrow hidden">
+ <div class="card" id="intro-card"></div>
+</section>
+
+<!-- ───────── 시험 ───────── -->
+<section id="scr-exam" class="wrap hidden">
+ <div class="section-head">
+  <div><div class="step" id="ex-step"></div><h1 id="ex-title"></h1><div class="muted" id="ex-sub"></div></div>
+  <div class="chip" id="ex-count"></div>
+ </div>
+ <div class="progress"><i id="ex-prog" style="width:0%"></i></div>
+ <div id="ex-body"></div>
+ <div class="exam-foot">
+  <span class="muted" id="ex-unans"></span>
+  <button class="btn primary lg" id="ex-next" onclick="submitSection()">제출하고 다음으로 →</button>
+ </div>
+</section>
+
+<!-- ───────── 레벨 배정 ───────── -->
+<section id="scr-assigned" class="wrap narrow hidden">
+ <div class="card bigcenter" id="assigned-card"></div>
+</section>
+
+<!-- ───────── 완료 ───────── -->
+<section id="scr-done" class="wrap narrow hidden">
+ <div class="card bigcenter" id="done-card"></div>
+</section>
+
+<!-- ───────── 교사 모드 ───────── -->
+<section id="scr-teacher" class="wrap hidden" style="max-width:1100px">
+ <div class="tabs">
+  <button class="tab active" data-tab="results" onclick="teacherTab('results')">응시 결과</button>
+  <button class="tab" data-tab="papers" onclick="teacherTab('papers')">시험지 인쇄 / 정답</button>
+ <button class="tab" data-tab="entry" onclick="teacherTab('entry')">지면 답안 입력</button>
+  <button class="tab" data-tab="settings" onclick="teacherTab('settings')">설정</button>
+ </div>
+ <div id="tt-results">
+  <div class="stat-row" id="t-stats"></div>
+  <div class="toolbar">
+   <div class="seg"><button id="vm-all" class="on" onclick="setViewMode('all')">전체 응시 목록</button><button id="vm-student" onclick="setViewMode('student')">학생별 보기</button></div>
+   <input id="f-name" placeholder="이름 검색" oninput="renderResults()">
+   <select id="f-grade" onchange="renderResults()"><option value="">전체 학년</option><option>초1</option><option>초2</option><option>초3</option><option>초4</option><option>초5</option><option>초6</option><option>중1</option></select>
+   <select id="f-level" onchange="renderResults()"><option value="">전체 레벨</option><option value="1">Test 1</option><option value="2">Test 2</option><option value="3">Test 3</option></select>
+   <span class="spacer" style="flex:1"></span>
+   <span class="muted" id="sync-status">동기화 중…</span>
+  </div>
+  <div class="card" style="padding:0"><div class="tbl-wrap"><table class="tbl" id="results-table"></table></div></div>
+  <div id="student-view" class="hidden"></div>
+ </div>
+ <div id="tt-papers" class="hidden">
+  <div class="toolbar no-print">
+   <select id="paper-sel" onchange="renderPaper()">
+    <option value="pre">Pre-test (어휘 15문항)</option>
+    <option value="1">Test 1 · 초등 기초</option>
+    <option value="2">Test 2 · 초등 심화</option>
+    <option value="3">Test 3 · 중등</option>
+   </select>
+   <label style="font-size:13px;display:flex;align-items:center;gap:6px"><input type="checkbox" id="paper-ans" onchange="renderPaper()">정답 표시(교사용)</label>
+   <button class="btn primary sm" onclick="printPaper('student')">학생용 시험지</button>
+   <button class="btn amber sm" onclick="printPaper('key')">교사용 정답지</button>
+   <button class="btn ghost sm" onclick="printPaper('sheet')">답안지(OMR)</button>
+   <span class="muted">버튼을 누르면 이 화면이 인쇄용으로 바뀌고 인쇄 창이 열립니다.</span>
+  </div>
+  <div class="paper" id="paper"></div>
+ </div>
+ <div id="tt-entry" class="hidden">
+ <div class="card" style="max-width:860px">
+  <h2>지면 시험 답안 입력</h2>
+  <p class="muted" style="margin:6px 0 16px">종이로 응시한 학생의 답안지를 옮겨 적으면 온라인 응시와 동일하게 채점되고 성적표가 만들어집니다.</p>
+  <div class="field-row">
+   <div class="field"><label>이름 *</label><input id="en-name" autocomplete="off"></div>
+   <div class="field"><label>학년 *</label><select id="en-grade"><option value="">선택</option><option>초1</option><option>초2</option><option>초3</option><option>초4</option><option>초5</option><option>초6</option><option>중1</option></select></div>
+  </div>
+  <div class="field-row">
+   <div class="field"><label>학교</label><input id="en-school"></div>
+   <div class="field"><label>응시일</label><input id="en-date" type="date"></div>
+  </div>
+  <div class="field" style="max-width:320px"><label>응시한 시험지 *</label>
+   <select id="en-level" onchange="renderEntryMain()">
+    <option value="">선택</option><option value="1">Test 1 · 초등 기초</option><option value="2">Test 2 · 초등 심화</option><option value="3">Test 3 · 중등</option>
+   </select></div>
+  <p class="muted" style="margin:-6px 0 12px">학생이 실제로 푼 시험지를 선택하세요.</p>
+  <div id="en-main"></div>
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
+   <button class="btn ghost" onclick="resetEntry()">초기화</button>
+   <button class="btn primary" onclick="saveEntry()">채점하고 저장</button>
+  </div>
+ </div>
+</div>
+<div id="tt-settings" class="hidden">
+  <div class="card" style="max-width:640px">
+   <h2>설정</h2>
+   <p class="muted" style="margin:6px 0 16px">설정은 이 브라우저(교사용 PC)에 저장됩니다.</p>
+   <div class="field"><label>교사 모드 PIN</label><input id="set-pin" placeholder="기본 1234"></div>
+   <div class="field"><label>학원명 (성적표 표기)</label><input id="set-academy" placeholder="윌그로우 거제캠퍼스 어학원"></div>
+   <div style="display:flex;gap:8px;justify-content:flex-end">
+    <button class="btn primary" onclick="saveSettings()">저장</button>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ───────── 성적표 ───────── -->
+<section id="scr-report" class="wrap hidden" style="max-width:900px">
+ <div class="report-actions no-print">
+  <button class="btn ghost" onclick="openTeacher(true)">← 결과 목록</button>
+  <button class="btn amber" id="btn-ai" onclick="generateAI(true)">학습처방 다시 생성</button>
+  <button class="btn primary" onclick="window.print()">인쇄 / PDF 저장</button>
+ </div>
+ <div id="report"></div>
+</section>
+
+<!-- 모달: PIN -->
+<div class="overlay" id="ov-pin">
+ <div class="modal">
+  <h2>교사 모드</h2>
+  <div class="field"><label>PIN</label><input id="pin-in" type="password" inputmode="numeric" placeholder="PIN 입력" onkeydown="if(event.key==='Enter')checkPin()"></div>
+  <div class="foot"><button class="btn ghost" onclick="closeOv('ov-pin')">취소</button><button class="btn primary" onclick="checkPin()">확인</button></div>
+ </div>
+</div>
+<!-- 모달: 라이팅 채점 -->
+<div class="overlay" id="ov-grade">
+ <div class="modal" style="width:560px">
+  <h2>자유 작문 채점</h2>
+  <div class="free-box" id="grade-text" style="margin-bottom:12px"></div>
+  <div class="field"><label>점수 (0~9)</label><input id="grade-score" type="number" min="0" max="9"></div>
+  <div class="field"><label>피드백</label><textarea id="grade-fb" style="min-height:80px"></textarea></div>
+  <div class="foot"><button class="btn ghost" onclick="closeOv('ov-grade')">취소</button><button class="btn primary" onclick="saveFreeGrade()">저장</button></div>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════════
+// WILLGROW 성취도 평가 v2 — 문항 은행
+// 기준: 2022 개정 교육과정 영어과 기본 어휘(초등 800 / 중등 누적 1,800)
+// Level 1 초등 기초(초3~4학년군) · Level 2 초등 심화(초5~6학년군) · Level 3 중등(중1~2)
+// band: 'elem'(초등 필수 800) | 'mid'(중등 추가 1,000)  csat: 최근 5개년 수능 빈출 어휘/어법 항목
+// ═══════════════════════════════════════════════════════════════
+
+const GRADES = ['초1','초2','초3','초4','초5','초6','중1'];
+const LEVEL_SCALE = ['초1','초2','초3','초4','초5','초6','중1','중2','중2 이상'];
+
+const LEVELS = {
+ 1: { key:1, name:'Test 1', label:'초등 기초', range:'초1~초3 · 교육과정 초3~4학년군', color:'#2E9E6B', emoji:'' },
+ 2: { key:2, name:'Test 2', label:'초등 심화', range:'초4~초6 · 교육과정 초5~6학년군', color:'#1C5FA6', emoji:'' },
+ 3: { key:3, name:'Test 3', label:'중등',   range:'중1~중2 · 교육과정 중학교 1~2학년', color:'#7C3AED', emoji:'' }
+};
+
+// 평가 항목(태그) 정의
+const TAGS = {
+ V1:{domain:'vocab',  label:'단어 의미 이해하기(영영풀이)'},
+ V2:{domain:'vocab',  label:'문맥에서 단어 이해하고 활용하기'},
+ V3:{domain:'vocab',  label:'상관 관계 파악하기(반의어)'},
+ V4:{domain:'vocab',  label:'다의어·공통어 이해하기'},
+ GA:{domain:'grammar', label:'어법성 판단하기'},
+ GB:{domain:'grammar', label:'어법에 맞게 사용하기'},
+ R1:{domain:'reading', label:'대의 파악하기'},
+ R2:{domain:'reading', label:'세부 사항 파악하기'},
+ R3:{domain:'reading', label:'추론하기'},
+ R4:{domain:'reading', label:'논리적 관계·문맥 어휘 파악하기'},
+ W1:{domain:'writing', label:'어순에 맞게 문장 만들기'},
+ W2:{domain:'writing', label:'어법에 맞는 형태로 쓰기'},
+ W3:{domain:'writing', label:'문장 오류 고쳐 쓰기'},
+ W4:{domain:'writing', label:'자유 작문(내용·문법·어휘)'}
+};
+
+const DOMAINS = {
+ vocab:  {label:'어휘',  en:'Vocabulary', pts:24, time:8},
+ grammar: {label:'문법',  en:'Grammar',  pts:24, time:10},
+ reading: {label:'독해',  en:'Reading',  pts:28, time:14},
+ writing: {label:'라이팅', en:'Writing',  pts:24, time:8}
+};
+
+const VTYPE = {
+ def:  '다음 영영풀이에 해당하는 단어는?',
+ blank: '다음 문장의 빈칸에 알맞은 단어는?',
+ ant:  '다음 문장에서 밑줄 친 단어와 <b>반대</b> 의미인 단어는?',
+ common: '다음 두 문장의 빈칸에 <b>공통으로</b> 들어갈 단어는?'
+};
+
+// ─────────────────────────── PRE-TEST (어휘 15문항, 5분) ───────────────────────────
+// band 1: 초3~4학년군 어휘 / band 2: 초5~6학년군 어휘 / band 3: 중1~2 어휘
+const PRETEST = [
+ {id:'P01',band:1,type:'def', q:'The meal you eat in the evening.', opts:['breakfast','lunch','dinner','snack'], ans:2, word:'dinner'},
+ {id:'P03',band:1,type:'def', q:'A room where you cook food.', opts:['bedroom','kitchen','bathroom','garden'], ans:1, word:'kitchen'},
+ {id:'P05',band:1,type:'def', q:'The day after today.', opts:['yesterday','tonight','tomorrow','morning'], ans:2, word:'tomorrow'},
+ {id:'P08',band:1,type:'blank',q:'I am ___. Give me some water, please.', opts:['hungry','sleepy','thirsty','angry'], ans:2, word:'thirsty'},
+ {id:'P10',band:1,type:'blank',q:'Birds can ___ in the sky.', opts:['swim','run','fly','jump'], ans:2, word:'fly'},
+
+ {id:'P11',band:2,type:'def', q:'A large area of land covered with trees.', opts:['desert','forest','beach','island'], ans:1, word:'forest'},
+ {id:'P13',band:2,type:'def', q:'The money you pay for something.', opts:['gift','coin','price','bill'], ans:2, word:'price'},
+ {id:'P15',band:2,type:'def', q:'A person who travels in a bus or plane but does not drive it.', opts:['driver','pilot','passenger','guide'], ans:2, word:'passenger'},
+ {id:'P16',band:2,type:'blank',q:'This puzzle is ___. I can\'t solve it.', opts:['easy','difficult','funny','cheap'], ans:1, word:'difficult'},
+ {id:'P20',band:2,type:'blank',q:'My uncle is a ___. He grows rice and vegetables.', opts:['baker','doctor','farmer','pilot'], ans:2, word:'farmer'},
+
+ {id:'P21',band:3,type:'def', q:'To find something for the first time.', opts:['discover','invent','deliver','decide'], ans:0, word:'discover', csat:true},
+ {id:'P22',band:3,type:'blank',q:'Smoking is ___ to your health.', opts:['helpful','harmful','useful','careful'], ans:1, word:'harmful', csat:true},
+ {id:'P26',band:3,type:'blank',q:'It is ___ to see snow in July.', opts:['common','similar','certain','unusual'], ans:3, word:'unusual', csat:true},
+ {id:'P28',band:3,type:'blank',q:'The scientist did an ___ to test her idea.', opts:['experience','experiment','example','exhibition'], ans:1, word:'experiment', csat:true},
+ {id:'P30',band:3,type:'blank',q:'Global warming ___ the sea level to rise.', opts:['allows','cares','causes','covers'], ans:2, word:'cause', csat:true}
+];
+
+// Pre-test 배정 규칙: band별 5점 만점
+function routeLevel(b){
+ if(b[1] <= 3) return 1;
+ if(b[2] <= 3) return 2;
+ return b[3] >= 3 ? 3 : 2;
+}
+
+// ─────────────────────────── LEVEL 1 (초등 기초) ───────────────────────────
+const L1 = {
+ vocab: [
+  {id:'1V01',type:'def', tag:'V1',band:'elem',word:'school',  q:'A place where children go to learn with teachers.', opts:['park','school','hospital','store'], ans:1},
+  {id:'1V02',type:'def', tag:'V1',band:'elem',word:'breakfast',q:'The first meal you eat in the morning.', opts:['lunch','dinner','breakfast','snack'], ans:2},
+  {id:'1V03',type:'def', tag:'V1',band:'elem',word:'giraffe', q:'An animal with a very long neck. It eats leaves from tall trees.', opts:['lion','giraffe','rabbit','monkey'], ans:1},
+  {id:'1V05',type:'blank',tag:'V2',band:'elem',word:'close',  q:'Please ___ the door. It\'s cold outside.', opts:['open','close','read','sing'], ans:1},
+  {id:'1V06',type:'blank',tag:'V2',band:'elem',word:'brush',  q:'I ___ my teeth after every meal.', opts:['wash','cut','brush','draw'], ans:2},
+  {id:'1V07',type:'blank',tag:'V2',band:'elem',word:'sunny',  q:'Look at the sky! It\'s ___ today. Let\'s go to the park.', opts:['rainy','snowy','windy','sunny'], ans:3},
+  {id:'1V09',type:'ant', tag:'V3',band:'elem',word:'big',   q:'The elephant is very <u>big</u>.', opts:['tall','small','long','fat'], ans:1},
+  {id:'1V10',type:'ant', tag:'V3',band:'elem',word:'hot',   q:'It is <u>hot</u> in summer.', opts:['warm','wet','cold','dry'], ans:2},
+  {id:'1V11',type:'ant', tag:'V3',band:'elem',word:'left',   q:'Turn <u>left</u> at the corner.', opts:['up','down','right','back'], ans:2},
+  {id:'1V13',type:'common',tag:'V4',band:'elem',word:'ride',  q:'I ___ a bike to school.<br>Let\'s ___ the roller coaster!', opts:['walk','ride','drive','run'], ans:1},
+  {id:'1V14',type:'common',tag:'V4',band:'elem',word:'lunch',  q:'It\'s time for ___. Let\'s eat!<br>We have ___ at 12:30.', opts:['breakfast','dinner','lunch','snack'], ans:2},
+  {id:'1V15',type:'common',tag:'V4',band:'elem',word:'play',   q:'Can you ___ the guitar?<br>We ___ soccer after school.', opts:['do','make','go','play'], ans:3},
+ ],
+ grammar: [
+  {id:'1G01',tag:'GB',gp:'be동사 현재형',   q:'I ___ a student.', opts:['am','is','are','be'], ans:0},
+  {id:'1G02',tag:'GB',gp:'일반동사 3인칭 단수',q:'She ___ to school every day.', opts:['go','goes','going','went'], ans:1},
+  {id:'1G03',tag:'GB',gp:'일반동사 의문문',  q:'___ you like pizza?', opts:['Is','Are','Do','Does'], ans:2},
+  {id:'1G04',tag:'GB',gp:'일반동사 부정문',  q:'He ___ like carrots.', opts:['don\'t','doesn\'t','isn\'t','not'], ans:1},
+  {id:'1G05',tag:'GB',gp:'인칭대명사(소유격)', q:'This is ___ book.', opts:['I','me','my','mine'], ans:2},
+  {id:'1G06',tag:'GB',gp:'명사의 복수형',   q:'There are three ___ on the table.', opts:['apple','apples','an apple','apple\'s'], ans:1},
+  {id:'1G07',tag:'GB',gp:'현재진행형',    q:'Look! The cat ___ on the sofa.', opts:['sleep','sleeps','is sleeping','sleeping'], ans:2},
+  {id:'1G08',tag:'GB',gp:'조동사 can',    q:'I ___ swim very well.', opts:['am','can','do','does'], ans:1},
+  {id:'1G10',tag:'GB',gp:'의문사',      q:'___ is she? — She is my sister.', opts:['What','Who','Where','When'], ans:1},
+  {id:'1G12',tag:'GB',gp:'명령문',      q:'___ your hands before lunch.', opts:['Wash','Washes','Washing','Washed'], ans:0},
+  {id:'1G13',tag:'GA',gp:'일반동사 3인칭 단수',q:'다음 중 어법상 <b>틀린</b> 문장은?', opts:['He is a teacher.','They are happy.','She have a dog.','We like music.'], ans:2},
+  {id:'1G15',tag:'GA',gp:'be동사 현재형',   q:'다음 중 어법상 <b>틀린</b> 문장은?', opts:['I am ten years old.','You is my friend.','It is a big dog.','We are in the classroom.'], ans:1}
+ ],
+ reading: [
+  {id:'1RA',title:'My Family',
+   text:`Hi! My name is Mina. I am nine years old. There are four people in my family: my dad, my mom, my brother, and me. My dad is a cook. He makes delicious food. My mom is a nurse. She works at a hospital. My brother, Jun, is twelve. He likes soccer. We have a dog, Coco. Coco is small and brown. I love my family.`,
+   qs:[
+   {id:'1R01',tag:'R1',q:'이 글의 주제로 가장 알맞은 것은?', opts:['Mina의 학교','Mina의 가족','Mina의 취미','Mina의 강아지'], ans:1},
+   {id:'1R02',tag:'R2',q:'Mina의 엄마의 직업은 무엇인가요?', opts:['cook','teacher','nurse','doctor'], ans:2},
+   {id:'1R03',tag:'R2',q:'Jun은 몇 살인가요?', opts:['9','10','11','12'], ans:3},
+   {id:'1R04',tag:'R3',q:'이 글에서 알 수 <b>없는</b> 것은?', opts:['Coco의 색깔','Mina의 나이','아빠가 하는 일','Mina가 좋아하는 음식'], ans:3}
+   ]},
+  {id:'1RC',title:'Ben and Max',
+   text:`Ben has a dog. His name is Max. Every morning, Ben and Max walk in the park. Max likes to run. One day, Max sees a cat. He runs after the cat. "Max, stop!"says Ben. But Max does not stop. Ben runs and runs. Finally, Max stops under a big tree. The cat is up in the tree. Ben laughs. "Let's go home, Max."`,
+   qs:[
+   {id:'1R08',tag:'R2',q:'Ben과 Max는 매일 아침 어디에서 걷나요?', opts:['at school','in the park','at home','on the beach'], ans:1},
+   {id:'1R09',tag:'R4',q:'Max가 달리기 시작한 <b>이유</b> 는?', opts:['He sees a cat.','He is hungry.','He sees Ben.','He wants to go home.'], ans:0},
+   {id:'1R10',tag:'R3',q:'이야기의 마지막에 Ben의 기분으로 알맞은 것은?', opts:['angry','sad','scared','happy'], ans:3}
+   ]}
+ ],
+ writing: [
+  {id:'1W01',tag:'W1',type:'order',pts:5, q:'다음 단어를 바르게 배열하여 문장을 쓰세요.', prompt:'is / my / this / bag', accept:['this is my bag'], model:'This is my bag.'},
+  {id:'1W03',tag:'W2',type:'form', pts:5, q:'괄호 안의 단어를 알맞은 형태로 바꿔 빈칸에 쓰세요.', prompt:'She ______ (have) a cat.', accept:['has'], model:'has'},
+  {id:'1W05',tag:'W3',type:'fix', pts:5, q:'다음 문장에서 <b>틀린 부분</b> 을 고쳐 문장 전체를 다시 쓰세요.', prompt:'He go to school by bus.', accept:['he goes to school by bus'], model:'He goes to school by bus.'},
+  {id:'1W06',tag:'W4',type:'free', pts:9, q:'자기소개를 영어로 <b>2문장</b> 쓰세요. (이름, 좋아하는 것)', prompt:'예) My name is ... / I like ...', rubric:'초3~4 수준: 2문장, 이름과 좋아하는 것 포함, be동사/일반동사 형태 정확'}
+ ]
+};
+
+// ─────────────────────────── LEVEL 2 (초등 심화) ───────────────────────────
+const L2 = {
+ vocab: [
+  {id:'2V01',type:'def', tag:'V1',band:'elem',word:'arrive',  q:'To reach the place you are going to.', opts:['leave','arrive','travel','return'], ans:1},
+  {id:'2V02',type:'def', tag:'V1',band:'elem',word:'nervous', q:'Feeling worried or afraid about something that will happen.', opts:['excited','bored','nervous','proud'], ans:2},
+  {id:'2V03',type:'def', tag:'V1',band:'elem',word:'expensive',q:'Costing a lot of money.', opts:['cheap','free','useful','expensive'], ans:3},
+  {id:'2V05',type:'blank',tag:'V2',band:'elem',word:'borrow',  q:'Can I ___ your pen? I\'ll give it back tomorrow.', opts:['lend','buy','borrow','sell'], ans:2},
+  {id:'2V06',type:'blank',tag:'V2',band:'elem',word:'salty',  q:'The soup is too ___. Please add some water.', opts:['sweet','salty','cold','fresh'], ans:1},
+  {id:'2V07',type:'blank',tag:'V2',band:'elem',word:'save',   q:'We should ___ energy by turning off the lights.', opts:['spend','waste','lose','save'], ans:3},
+  {id:'2V09',type:'ant', tag:'V3',band:'elem',word:'heavy',  q:'This bag is very <u>heavy</u>.', opts:['soft','small','light','strong'], ans:2},
+  {id:'2V10',type:'ant', tag:'V3',band:'elem',word:'dangerous',q:'The road is <u>dangerous</u> at night.', opts:['busy','safe','dark','quiet'], ans:1},
+  {id:'2V11',type:'ant', tag:'V3',band:'elem',word:'remember', q:'He <u>remembered</u> her name.', opts:['called','wrote','asked','forgot'], ans:3},
+  {id:'2V13',type:'common',tag:'V4',band:'elem',word:'pass',  q:'Can you ___ me the salt?<br>I hope I ___ the test.', opts:['give','pass','take','win'], ans:1},
+  {id:'2V14',type:'common',tag:'V4',band:'elem',word:'time',  q:'What ___ is it? — It\'s 3 o\'clock.<br>I don\'t have ___ to play today.', opts:['day','hour','time','watch'], ans:2},
+  {id:'2V15',type:'common',tag:'V4',band:'elem',word:'miss',   q:'Hurry up! Don\'t ___ the bus!<br>I ___ you so much, Grandma.', opts:['take','catch','like','miss'], ans:3},
+ ],
+ grammar: [
+  {id:'2G01',tag:'GB',gp:'일반동사 과거형',   q:'Yesterday, I ___ to the zoo with my family.', opts:['go','goes','went','going'], ans:2, csat:true},
+  {id:'2G02',tag:'GB',gp:'be동사 과거형',    q:'She ___ at home last night.', opts:['is','was','were','are'], ans:1},
+  {id:'2G03',tag:'GB',gp:'미래시제 will',    q:'Tomorrow it ___ rain, so bring an umbrella.', opts:['is','did','will','was'], ans:2, csat:true},
+  {id:'2G04',tag:'GB',gp:'비교급',        q:'An elephant is ___ than a horse.', opts:['big','bigger','biggest','more big'], ans:1, csat:true},
+  {id:'2G05',tag:'GB',gp:'최상급',        q:'Mt. Everest is the ___ mountain in the world.', opts:['high','higher','most high','highest'], ans:3, csat:true},
+  {id:'2G06',tag:'GB',gp:'조동사 should',    q:'You ___ wear a helmet when you ride a bike.', opts:['should','can\'t','may','are'], ans:0},
+  {id:'2G07',tag:'GB',gp:'to부정사(want to)',  q:'I want ___ a doctor.', opts:['be','being','to be','am'], ans:2, csat:true},
+  {id:'2G08',tag:'GB',gp:'동명사(enjoy -ing)',  q:'He enjoys ___ books.', opts:['read','reads','to read','reading'], ans:3, csat:true},
+  {id:'2G09',tag:'GB',gp:'접속사 so/because',  q:'I was tired, ___ I went to bed early.', opts:['but','or','so','because'], ans:2, csat:true},
+  {id:'2G10',tag:'GB',gp:'빈도부사',       q:'She ___ goes to school by bus. She never walks.', opts:['never','always','sometimes','once'], ans:1},
+  {id:'2G13',tag:'GA',gp:'일반동사 과거 부정문', q:'다음 중 어법상 <b>틀린</b> 문장은?', opts:['She didn\'t went to school.','I am going to visit my uncle.','He is taller than me.','We were late yesterday.'], ans:0, csat:true},
+  {id:'2G15',tag:'GA',gp:'현재진행형 vs 현재',  q:'다음 중 어법상 <b>틀린</b> 문장은?', opts:['I am reading a book now.','They play tennis every Sunday.','She is study math now.','We usually eat lunch at noon.'], ans:2, csat:true}
+ ],
+ reading: [
+  {id:'2RA',title:'Field Trip Diary',
+   text:`Friday, October 12<br><br>Today our class went on a field trip to the science museum. We took the bus at 9 o'clock. At the museum, we saw a huge dinosaur skeleton. It was taller than our school building! After that, we watched a 3D movie about space. My favorite part was the robot show. A robot danced and answered our questions. We ate lunch in the garden and came back to school at 3. I was tired, but it was the best day of this year.`,
+   qs:[
+   {id:'2R01',tag:'R1',q:'이 글의 종류로 가장 알맞은 것은?', opts:['일기','편지','광고','안내문'], ans:0},
+   {id:'2R02',tag:'R2',q:'글쓴이가 박물관에서 가장 좋아한 것은?', opts:['dinosaur skeleton','3D movie','robot show','lunch in the garden'], ans:2},
+   {id:'2R03',tag:'R2',q:'학생들이 학교로 돌아온 시각은?', opts:['9 o\'clock','12 o\'clock','2 o\'clock','3 o\'clock'], ans:3},
+   {id:'2R04',tag:'R3',q:'글쓴이의 기분으로 알맞은 것은?', opts:['bored and sleepy','tired but happy','angry and sad','scared but excited'], ans:1}
+   ]},
+  {id:'2RC',title:'Busy Honeybees',
+   text:`Honeybees are small but very important. They live together in a hive. In one hive, there is one queen bee and thousands of worker bees. Worker bees fly from flower to flower to collect nectar. They use the nectar to make honey. When bees visit flowers, they also carry pollen. This helps plants make fruits and seeds. Without bees, we would not have many fruits like apples and strawberries. So next time you see a bee, don't be afraid. Just let it do its job!`,
+   qs:[
+   {id:'2R08',tag:'R1',q:'이 글의 주제로 가장 알맞은 것은?', opts:['벌에 쏘였을 때 치료법','꿀벌이 중요한 이유','여왕벌의 생활','사과를 기르는 방법'], ans:1},
+   {id:'2R09',tag:'R2',q:'일벌(worker bees)이 하는 일은?', opts:['알을 낳는다.','벌집을 지킨다.','꽃에서 꿀(nectar)을 모은다.','열매를 먹는다.'], ans:2},
+   {id:'2R10',tag:'R4',q:'벌이 없으면 사과와 딸기가 적어지는 <b>이유</b> 는?', opts:['벌이 열매를 먹기 때문에','벌이 꽃가루(pollen)를 옮겨 주기 때문에','벌이 꿀을 만들기 때문에','벌이 사람을 무서워하기 때문에'], ans:1}
+   ]}
+ ],
+ writing: [
+  {id:'2W01',tag:'W1',type:'order',pts:5, q:'다음 단어를 바르게 배열하여 문장을 쓰세요.', prompt:'went / I / yesterday / to the park', accept:['i went to the park yesterday','yesterday i went to the park'], model:'I went to the park yesterday.'},
+  {id:'2W03',tag:'W2',type:'form', pts:5, q:'괄호 안의 단어를 알맞은 형태로 바꿔 빈칸에 쓰세요.', prompt:'I ______ (visit) my grandma last weekend.', accept:['visited'], model:'visited'},
+  {id:'2W05',tag:'W3',type:'fix', pts:5, q:'다음 문장에서 <b>틀린 부분</b> 을 고쳐 문장 전체를 다시 쓰세요.', prompt:'I am going to buying a new bike.', accept:['i am going to buy a new bike','im going to buy a new bike'], model:'I am going to buy a new bike.'},
+  {id:'2W06',tag:'W4',type:'free', pts:9, q:'지난 주말에 한 일을 영어로 <b>3문장</b> 쓰세요.', prompt:'예) Last weekend, I ... / It was ...', rubric:'초5~6 수준: 3문장, 과거시제 사용, 접속사(and/because 등) 활용 시 가점'}
+ ]
+};
+
+// ─────────────────────────── LEVEL 3 (중등) ───────────────────────────
+const L3 = {
+ vocab: [
+  {id:'3V01',type:'def', tag:'V1',band:'mid',word:'increase',  q:'To become or make something bigger or greater in amount.', opts:['reduce','increase','measure','collect'], ans:1, csat:true},
+  {id:'3V02',type:'def', tag:'V1',band:'mid',word:'environment',q:'The natural world around us, including land, water, air, plants, and animals.', opts:['culture','society','environment','history'], ans:2, csat:true},
+  {id:'3V03',type:'def', tag:'V1',band:'mid',word:'delay',   q:'To put something off until a later time.', opts:['cancel','attend','prepare','delay'], ans:3, csat:true},
+  {id:'3V05',type:'blank',tag:'V2',band:'mid',word:'require',  q:'Plants ___ light and water to grow.', opts:['avoid','require','produce','waste'], ans:1, csat:true},
+  {id:'3V06',type:'blank',tag:'V2',band:'mid',word:'proud',   q:'She was so ___ of her son when he won the prize.', opts:['afraid','tired','proud','jealous'], ans:2},
+  {id:'3V07',type:'blank',tag:'V2',band:'mid',word:'compare',  q:'The teacher asked us to ___ the two poems and find the differences.', opts:['create','describe','repeat','compare'], ans:3, csat:true},
+  {id:'3V09',type:'ant', tag:'V3',band:'mid',word:'positive',  q:'The movie had a <u>positive</u> effect on the kids.', opts:['great','negative','similar','direct'], ans:1, csat:true},
+  {id:'3V10',type:'ant', tag:'V3',band:'mid',word:'complicated',q:'The instructions were very <u>complicated</u>.', opts:['difficult','careful','simple','serious'], ans:2, csat:true},
+  {id:'3V12',type:'ant', tag:'V3',band:'mid',word:'accept',   q:'The company decided to <u>accept</u> the offer.', opts:['refuse','receive','repeat','report'], ans:0, csat:true},
+  {id:'3V13',type:'common',tag:'V4',band:'mid',word:'mean',   q:'What does this word ___?<br>I didn\'t ___ to hurt you.', opts:['say','mean','make','want'], ans:1, csat:true},
+  {id:'3V14',type:'common',tag:'V4',band:'mid',word:'make',   q:'We need to ___ a decision soon.<br>She will ___ a great leader.', opts:['take','become','make','get'], ans:2},
+  {id:'3V15',type:'common',tag:'V4',band:'mid',word:'company',  q:'She works for a fashion ___.<br>He enjoys the ___ of his friends.', opts:['business','group','office','company'], ans:3, csat:true}
+ ],
+ grammar: [
+  {id:'3G01',tag:'GB',gp:'현재완료',       q:'I ___ Tom since 2020.', opts:['know','knew','have known','am knowing'], ans:2, csat:true},
+  {id:'3G02',tag:'GB',gp:'수동태',        q:'This bridge ___ in 1990.', opts:['built','was built','is building','has built'], ans:1, csat:true},
+  {id:'3G03',tag:'GB',gp:'관계대명사(주격)',   q:'I have a friend ___ lives in Canada.', opts:['who','which','whose','whom'], ans:0, csat:true},
+  {id:'3G04',tag:'GB',gp:'관계대명사(목적격)',  q:'The movie ___ we watched yesterday was boring.', opts:['who','what','whose','which'], ans:3, csat:true},
+  {id:'3G05',tag:'GB',gp:'to부정사(명사적 용법)', q:'It is important ___ breakfast every day.', opts:['eat','eating','to eat','ate'], ans:2, csat:true},
+  {id:'3G06',tag:'GB',gp:'동명사 vs to부정사',  q:'She stopped ___ because she was tired.', opts:['run','to run','running','ran'], ans:2, csat:true},
+  {id:'3G07',tag:'GB',gp:'분사(현재분사)',    q:'Look at the ___ baby. She looks so happy.', opts:['sleep','slept','to sleep','sleeping'], ans:3, csat:true},
+  {id:'3G08',tag:'GB',gp:'주어-동사 수일치',   q:'The number of students in our school ___ increasing.', opts:['are','is','be','were'], ans:1, csat:true},
+  {id:'3G09',tag:'GB',gp:'접속사 that',      q:'I think ___ he is honest.', opts:['what','that','which','if'], ans:1, csat:true},
+  {id:'3G10',tag:'GB',gp:'접속사(양보)',     q:'___ it was raining, we went hiking.', opts:['Because','If','Although','So'], ans:2, csat:true},
+  {id:'3G14',tag:'GB',gp:'가정법 과거',      q:'If I ___ a bird, I would fly to you.', opts:['am','was','were','be'], ans:2, csat:true},
+  {id:'3G15',tag:'GA',gp:'5형식(want+목적어+to부정사)', q:'다음 중 어법상 <b>틀린</b> 문장은?', opts:['He has finished his homework.','The book was written by her.','I want you go home now.','She is good at swimming.'], ans:2, csat:true}
+ ],
+ reading: [
+  {id:'3RA',title:'Plastic in the Ocean',
+   text:`Every year, about 8 million tons of plastic end up in the ocean. Plastic bags, bottles, and straws float in the water for hundreds of years because they do not break down easily. Sea animals often mistake plastic for food. For example, sea turtles eat plastic bags because they look like jellyfish. Sadly, many of them die. Scientists say that by 2050, there could be more plastic than fish in the sea. <u>However</u>, there is hope. Many countries have started to ban plastic bags, and people are choosing reusable bottles. Small changes in our daily lives can make a big difference for the ocean.`,
+   qs:[
+   {id:'3R01',tag:'R1',q:'이 글의 주제로 가장 알맞은 것은?', opts:['바다거북의 먹이','해양 플라스틱 문제와 해결 노력','해파리의 생태','재활용 병의 종류'], ans:1},
+   {id:'3R02',tag:'R2',q:'바다거북이 비닐봉지를 먹는 이유는?', opts:['맛이 좋기 때문에','해파리처럼 보이기 때문에','먹이가 부족하기 때문에','물고기가 먹기 때문에'], ans:1},
+   {id:'3R03',tag:'R3',q:'글쓴이의 태도로 가장 알맞은 것은?', opts:['문제가 해결되기 어렵다고 본다.','작은 실천이 변화를 만든다고 믿는다.','과학자들의 예측을 믿지 않는다.','플라스틱 사용을 늘려야 한다고 본다.'], ans:1},
+   {id:'3R04',tag:'R4',q:'글의 흐름상 <u>However</u> 가 하는 역할은?', opts:['앞 내용의 예를 든다.','앞 내용과 반대되는 희망적 내용을 이끈다.','앞 내용을 요약한다.','원인을 설명한다.'], ans:1}
+   ]},
+  {id:'3RC',title:'School Uniforms: Yes or No?',
+   text:`Dear Editor,<br><br>I am writing to share my opinion about school uniforms. Some students say uniforms take away their freedom to express themselves. I understand this, but I believe uniforms have more <u>advantages</u>. First, uniforms save time and money. Students don't have to worry about what to wear every morning, and parents don't need to buy many different clothes. Second, uniforms make everyone equal. Nobody is judged by expensive brands. Finally, uniforms give students a sense of belonging to their school. For these reasons, I think schools should keep their uniforms.<br><br>Sincerely,<br>Jiho Kim, Grade 8`,
+   qs:[
+   {id:'3R08',tag:'R1',q:'글쓴이의 주장으로 가장 알맞은 것은?', opts:['교복을 없애야 한다.','교복을 유지해야 한다.','교복 디자인을 바꿔야 한다.','학생들이 교복을 직접 골라야 한다.'], ans:1},
+   {id:'3R09',tag:'R2',q:'글쓴이가 제시한 교복의 장점이 <b>아닌</b> 것은?', opts:['시간과 돈을 아낀다.','모두를 평등하게 만든다.','소속감을 준다.','학교 성적을 올려 준다.'], ans:3},
+   {id:'3R10',tag:'R4',q:'밑줄 친 <u>advantages</u> 와 바꿔 쓸 수 있는 단어는?', opts:['problems','benefits','rules','costs'], ans:1}
+   ]}
+ ],
+ writing: [
+  {id:'3W01',tag:'W1',type:'order',pts:5, q:'다음 단어를 바르게 배열하여 문장을 쓰세요.', prompt:'has / lived / since 2015 / she / in Seoul', accept:['she has lived in seoul since 2015'], model:'She has lived in Seoul since 2015.'},
+  {id:'3W03',tag:'W2',type:'form', pts:5, q:'괄호 안의 단어를 알맞은 형태로 바꿔 빈칸에 쓰세요.', prompt:'The boy ______ (sit) on the bench is my cousin.', accept:['sitting'], model:'sitting'},
+  {id:'3W05',tag:'W3',type:'fix', pts:5, q:'다음 문장에서 <b>틀린 부분</b> 을 고쳐 문장 전체를 다시 쓰세요.', prompt:'She enjoys to play the piano.', accept:['she enjoys playing the piano'], model:'She enjoys playing the piano.'},
+  {id:'3W06',tag:'W4',type:'free', pts:9, q:'다음 주제에 대한 자신의 의견을 <b>3~4문장</b> 으로 쓰세요.<br><i>"Should students be allowed to use smartphones at school?"</i> 의견과 이유를 쓰세요.', prompt:'예) I think students should / should not ... because ...', rubric:'중1~2 수준: 3~4문장, 의견+이유 구조, 접속사·조동사 정확, 어휘 다양성'}
+ ]
+};
+
+const BANK = {1:L1, 2:L2, 3:L3};
+
+// 수능 5개년 빈출 어법 항목(참고용 표시)
+const CSAT_GRAMMAR_ITEMS = ['주어-동사 수일치','시제(현재완료·과거)','능동태/수동태','관계대명사·관계부사','접속사 vs 전치사','분사(현재·과거)','to부정사 vs 동명사','비교 구문','대명사 일치','병렬 구조','가정법'];
+</script><script>
+// ═══════════════════════════════════════════════════════════════
+// APP LOGIC
+// ═══════════════════════════════════════════════════════════════
+const firebaseConfig = {
+ apiKey:      "AIzaSyBb5PaBzLYdcaunFejqAkSFCYthYt_XNJ4",
+ authDomain:    "willgrowtest.firebaseapp.com",
+ projectId:     "willgrowtest",
+ storageBucket:   "willgrowtest.firebasestorage.app",
+ messagingSenderId: "942130265488",
+ appId:       "1:942130265488:web:a2cd1b53476b49d5f90715"
+};
+let fdb = null;
+try { firebase.initializeApp(firebaseConfig); fdb = firebase.firestore(); } catch(e){ console.warn('Firebase 미사용', e); }
+const COL = 'assessments';
+const LS_LOCAL = 'wg_assess_local';  // 오프라인 백업
+const LS_SETTINGS = 'wg_assess_settings';
+const LS_SESSION = 'wg_assess_session';
+
+const $ = id =>document.getElementById(id);
+const esc = s =>String(s??'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(msg, ms=2200){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'), ms); }
+function closeOv(id){ $(id).classList.remove('open'); }
+
+// ── 설정 ──
+function getSettings(){ try{ return Object.assign({pin:'1234', model:'claude-sonnet-4-6', academy:'윌그로우 거제캠퍼스 어학원', key:''}, JSON.parse(localStorage.getItem(LS_SETTINGS)||'{}')); }catch(e){ return {pin:'1234',model:'claude-sonnet-4-6',academy:'윌그로우 거제캠퍼스 어학원',key:''}; } }
+function saveSettings(){
+ const s = getSettings();
+ s.key = '';
+ s.pin = $('set-pin').value.trim() || '1234'; s.academy = $('set-academy').value.trim() || s.academy;
+ localStorage.setItem(LS_SETTINGS, JSON.stringify(s)); toast('설정을 저장했습니다.');
+}
+function loadSettingsForm(){ const s=getSettings(); $('set-pin').value=s.pin; $('set-academy').value=s.academy; }
+
+// ── 화면 전환 ──
+const SCREENS = ['landing','info','intro','exam','assigned','done','teacher','report'];
+function showScreen(name){
+ SCREENS.forEach(s => $('scr-'+s).classList.toggle('hidden', s!==name));
+ $('tb-home').classList.toggle('hidden', name==='landing');
+ if(name!=='exam'){ stopTimer(); $('tb-timer').classList.add('hidden'); }
+ if(name==='landing'||name==='teacher'||name==='report') $('tb-student').classList.add('hidden');
+ window.scrollTo({top:0});
+ if(name==='info'){ $('in-date').value = new Date().toISOString().slice(0,10); setTimeout(()=>$('in-name').focus(),50); }
+}
+function goHome(){
+ if(session && !session.finished && !confirm('시험을 중단하고 처음 화면으로 돌아갈까요? (진행 내용은 이 브라우저에 임시 저장됩니다)')) return;
+ showScreen('landing');
+}
+
+// ═══════════════════════ 학생 응시 흐름 ═══════════════════════
+let session = null;
+const FLOW = ['vocab','grammar','reading','writing'];
+
+function startExam(){
+ const name = $('in-name').value.trim(), grade = $('in-grade').value;
+ if(!name) return toast('이름을 입력해 주세요.');
+ if(!grade) return toast('학년을 선택해 주세요.');
+ const sel = $('in-level').value; if(!sel) return toast('시험지를 선택해 주세요.');
+ const lvl = sel==='pre' ? null : +sel;
+ session = {
+  id: 'a_' + Date.now(),
+  student: { name, grade, school: $('in-school').value.trim(), cls: $('in-class').value, date: $('in-date').value || new Date().toISOString().slice(0,10) },
+  stepIdx: 0, level: lvl, pre: {}, answers: {vocab:{}, grammar:{}, reading:{}, writing:{}}, times: {}, finished:false,
+  startedAt: new Date().toISOString()
+ };
+ persistSession();
+ $('tb-student').textContent = `${name} · ${grade}`; $('tb-student').classList.remove('hidden');
+ renderIntro(lvl ? 'vocab' : 'pre');
+}
+
+function renderIntro(kind){
+ const c = $('intro-card');
+ if(kind==='pre'){
+  c.innerHTML = `<div class="eyebrow">Pre-test</div><h1 style="margin:4px 0 12px">어휘 Pre-test 안내</h1>
+   <p style="margin-bottom:14px">15문항 · <b>5분</b> · 객관식</p>
+   <ul style="padding-left:20px;color:var(--text2);line-height:1.9;margin-bottom:22px">
+    <li>영영풀이 또는 문장의 빈칸에 알맞은 단어를 고릅니다.</li>
+    <li>초등 3학년부터 중학교 2학년 수준까지 단어가 섞여 나옵니다. <b>모르는 문제는 찍지 말고 넘어가도 괜찮아요.</b></li>
+    <li>결과에 따라 Test 1 · 2 · 3 중 알맞은 시험지를 추천해 드립니다.</li>
+   </ul>
+   <div style="text-align:right"><button class="btn primary lg" onclick="beginSection('pre')">시작하기 →</button></div>`;
+ } else {
+  const L = LEVELS[session.level];
+  const d = DOMAINS[kind];
+  c.innerHTML = `<div class="eyebrow">${L.name} · ${L.label}</div><h1 style="margin:4px 0 12px">${d.label} (${d.en})</h1>
+   <p style="margin-bottom:14px">${sectionItems(kind).length}문항 · <b>${d.time}분</b> · ${d.pts}점</p>
+   <p class="muted" style="margin-bottom:22px">${{
+    vocab:'영영풀이 · 문장 빈칸 · 반의어 · 두 문장 공통 단어 4가지 유형입니다.',
+    grammar:'빈칸에 알맞은 형태를 고르거나, 어법상 틀린 문장을 찾습니다.',
+    reading:'지문 3개를 읽고 물음에 답합니다. 지문을 먼저 끝까지 읽어 보세요.',
+    writing:'단어 배열, 형태 바꾸기, 오류 고치기, 자유 작문입니다. 문장은 대문자로 시작하고 마침표로 끝내세요.'
+   }[kind]}</p>
+   <div style="text-align:right"><button class="btn primary lg" onclick="beginSection('${kind}')">시작하기 →</button></div>`;
+ }
+ showScreen('intro');
+}
+
+function sectionItems(kind){
+ if(kind==='pre') return PRETEST;
+ const B = BANK[session.level];
+ if(kind==='reading') return B.reading.flatMap(p =>p.qs);
+ return B[kind];
+}
+
+// ── 타이머 ──
+let timer = null, timeLeft = 0;
+function startTimer(min, onEnd){
+ stopTimer(); timeLeft = min*60; const el=$('tb-timer'); el.classList.remove('hidden','warn');
+ const tick = () => {
+  const m = Math.floor(timeLeft/60), s = timeLeft%60;
+  el.textContent = `${m}:${String(s).padStart(2,'0')}`;
+  if(timeLeft<=60) el.classList.add('warn');
+  if(timeLeft<=0){ stopTimer(); onEnd(); return; }
+  timeLeft--;
+ };
+ tick(); timer = setInterval(tick, 1000);
+}
+function stopTimer(){ if(timer){ clearInterval(timer); timer=null; } }
+
+// ── 섹션 렌더 ──
+let curKind = null, secStart = 0;
+function beginSection(kind){
+ curKind = kind; secStart = Date.now();
+ const isPre = kind==='pre';
+ const L = session.level ? LEVELS[session.level] : null;
+ $('ex-step').textContent = isPre ? 'PRE-TEST' : `${L.name} · ${L.label} · STEP ${FLOW.indexOf(kind)+1}/4`;
+ $('ex-title').textContent = isPre ? '어휘 Pre-test' : `${DOMAINS[kind].label} ${DOMAINS[kind].en}`;
+ $('ex-sub').textContent = isPre ? '모르는 문제는 비워 두어도 됩니다.' : '모든 문제에 답한 뒤 제출하세요.';
+ $('ex-next').textContent = kind==='writing' ? '제출하고 시험 마치기 ' : '제출하고 다음으로 →';
+ renderExamBody(kind);
+ showScreen('exam');
+ startTimer(isPre ? 5 : DOMAINS[kind].time, () => { toast('시간이 종료되어 자동 제출됩니다.'); submitSection(true); });
+ updateProgress();
+}
+
+function optHTML(q, idx, kind){
+ const ko = /[가-힣]/.test(q.opts.join(''));
+ const store = kind==='pre' ? session.pre : session.answers[kind];
+ return `<div class="opts">${q.opts.map((o,i)=>`<label class="opt ${ko?'ko':''} ${store[q.id]===i?'sel':''}" onclick="pick('${kind}','${q.id}',${i},this)"><span class="k">${'ABCD'[i]}</span><span>${o}</span></label>`).join('')}</div>`;
+}
+function stemHTML(q){
+ if(q.type==='def') return `<div class="inst">${VTYPE.def}</div><div class="stem">"${q.q}"</div>`;
+ if(q.type==='blank') return `<div class="inst">${VTYPE.blank}</div><div class="stem">${q.q}</div>`;
+ if(q.type==='ant') return `<div class="inst">${VTYPE.ant}</div><div class="stem">${q.q}</div>`;
+ if(q.type==='common') return `<div class="inst">${VTYPE.common}</div><div class="stem">${q.q}</div>`;
+ const ko = /[가-힣]/.test(q.q.replace(/<[^>]+>/g,''));
+ return `<div class="stem ${ko?'ko':''}">${q.q}</div>`;
+}
+
+function renderExamBody(kind){
+ const body = $('ex-body'); let n = 0, html = '';
+ if(kind==='reading'){
+  BANK[session.level].reading.forEach(p => {
+   html += `<div class="passage"><div class="pt">Reading · ${p.title}</div>${p.text}</div>`;
+   p.qs.forEach(q => { n++; html += `<div class="q" id="q-${q.id}"><span class="qn">${n}</span>${stemHTML(q)}${optHTML(q,n,kind)}</div>`; });
+  });
+ } else if(kind==='writing'){
+  BANK[session.level].writing.forEach(q => {
+   n++; const v = session.answers.writing[q.id]||'';
+   html += `<div class="q" id="q-${q.id}"><span class="qn">${n}</span><span class="chip amber" style="float:right">${q.pts}점</span>
+    <div class="inst">${q.q}</div>
+    <div class="stem"><span class="prompt">${esc(q.prompt)}</span></div>
+    ${q.type==='free'
+     ? `<textarea placeholder="여기에 영어로 쓰세요." oninput="typed('${q.id}',this.value)">${esc(v)}</textarea>`
+     : `<input class="ans" placeholder="${q.type==='form'?'빈칸에 들어갈 단어':'문장 전체를 쓰세요'}" value="${esc(v)}" oninput="typed('${q.id}',this.value)" autocomplete="off">`}
+   </div>`;
+  });
+ } else {
+  sectionItems(kind).forEach(q => { n++; html += `<div class="q" id="q-${q.id}"><span class="qn">${n}</span>${stemHTML(q)}${optHTML(q,n,kind)}</div>`; });
+ }
+ body.innerHTML = html;
+ $('ex-count').textContent = `${n}문항`;
+}
+function pick(kind, id, i, el){
+ const store = kind==='pre' ? session.pre : session.answers[kind];
+ store[id] = i;
+ const box = el.closest('.q'); box.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); el.classList.add('sel'); box.classList.remove('unans');
+ persistSession(); updateProgress();
+}
+function typed(id, v){ session.answers.writing[id] = v; persistSession(); updateProgress(); }
+function answeredCount(kind){
+ const items = sectionItems(kind); const store = kind==='pre' ? session.pre : session.answers[kind];
+ return items.filter(q =>kind==='writing' ? (store[q.id]||'').trim() : store[q.id]!==undefined).length;
+}
+function updateProgress(){
+ const total = sectionItems(curKind).length, done = answeredCount(curKind);
+ $('ex-prog').style.width = (done/total*100)+'%';
+ $('ex-unans').textContent = done<total ? `아직 ${total-done}문항이 비어 있어요` : '모두 답했어요 ';
+}
+
+function submitSection(auto=false){
+ const total = sectionItems(curKind).length, done = answeredCount(curKind);
+ if(!auto && done<total){
+  if(curKind!=='pre'){
+   const items = sectionItems(curKind), store = session.answers[curKind];
+   items.forEach(q => { const empty = curKind==='writing' ? !(store[q.id]||'').trim() : store[q.id]===undefined; $('q-'+q.id).classList.toggle('unans', empty); });
+   const first = document.querySelector('.q.unans'); if(first) first.scrollIntoView({behavior:'smooth',block:'center'});
+   if(!confirm(`${total-done}문항이 비어 있습니다. 그래도 제출할까요?`)) return;
+  }
+ }
+ stopTimer();
+ session.times[curKind] = Math.round((Date.now()-secStart)/1000);
+ if(curKind==='pre'){ assignLevel(); return; }
+ const next = FLOW[FLOW.indexOf(curKind)+1];
+ if(next){ persistSession(); renderIntro(next); } else finishExam();
+}
+
+function assignLevel(){
+ const bands = {1:0,2:0,3:0};
+ PRETEST.forEach(q => { if(session.pre[q.id]===q.ans) bands[q.band]++; });
+ session.preBands = bands; session.preScore = bands[1]+bands[2]+bands[3];
+ const rec = routeLevel(bands);
+ persistSession();
+ $('assigned-card').innerHTML = `
+  <div class="eyebrow">Pre-test 완료 · ${session.preScore}/15 (초3~4 ${bands[1]} · 초5~6 ${bands[2]} · 중1~2 ${bands[3]})</div>
+  <h1 style="margin:6px 0 16px">${esc(session.student.name)} 학생에게 추천하는 시험지</h1>
+  <div class="level-badge" style="background:${LEVELS[rec].color}">${LEVELS[rec].name} <small>${LEVELS[rec].label} · ${LEVELS[rec].range}</small></div>
+  <p class="muted" style="margin:18px 0 14px">이어서 볼 시험지를 고르세요. (선생님 안내에 따라 다른 시험지를 골라도 됩니다)</p>
+  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+   ${[1,2,3].map(l=>`<button class="btn ${l===rec?'primary':'ghost'} lg" onclick="continueWith(${l})">${LEVELS[l].name}${l===rec?' (추천)':''}</button>`).join('')}
+  </div>
+  <p style="margin-top:22px"><button class="btn ghost sm" onclick="endAfterPre()">Pre-test만 보고 마치기</button></p>`;
+ showScreen('assigned');
+}
+function continueWith(l){ session.level = l; persistSession(); renderIntro('vocab'); }
+function endAfterPre(){
+ const s = session; session = null; localStorage.removeItem(LS_SESSION);
+ const rec = routeLevel(s.preBands);
+ $('done-card').innerHTML = `<h1 style="margin:6px 0 10px">Pre-test 완료</h1>
+  <p class="muted" style="margin-bottom:8px">${esc(s.student.name)} · ${s.student.grade}</p>
+  <div class="kv" style="max-width:420px;margin:0 auto 18px"><div><div class="l">점수</div><div class="v blue">${s.preScore} / 15</div></div><div><div class="l">추천 시험지</div><div class="v blue">${LEVELS[rec].name}</div></div></div>
+  <p class="muted" style="margin-bottom:20px">이 결과는 저장되지 않습니다. 선생님께 점수를 알려 주세요.</p>
+  <button class="btn primary" onclick="showScreen('landing')">처음으로</button>`;
+ showScreen('done');
+}
+
+async function finishExam(){
+ session.finished = true; session.finishedAt = new Date().toISOString();
+ const doc = buildDoc(session);
+ $('done-card').innerHTML = `<div class="emo"></div><h1>결과를 저장하는 중…</h1>`;
+ showScreen('done');
+ const ok = await saveDoc(doc);
+ localStorage.removeItem(LS_SESSION);
+ const a = analyze(doc, [], true);
+ $('done-card').innerHTML = `<div class="emo"></div>
+  <div class="eyebrow">${ok?'저장 완료':'이 기기에 저장됨'}</div>
+  <h1 style="margin:6px 0 10px">수고했어요, ${esc(doc.student.name)}!</h1>
+  <p class="muted" style="margin-bottom:18px">${LEVELS[doc.level].name} · 객관식 채점 결과</p>
+  <div class="kv" style="max-width:420px;margin:0 auto 24px">
+   <div><div class="l">어휘</div><div class="v blue">${a.dom.vocab.pct}%</div></div>
+   <div><div class="l">문법</div><div class="v blue">${a.dom.grammar.pct}%</div></div>
+   <div><div class="l">독해</div><div class="v blue">${a.dom.reading.pct}%</div></div>
+   <div><div class="l">라이팅(자동채점)</div><div class="v blue">${a.dom.writing.autoPct}%</div></div>
+  </div>
+  <p class="muted" style="margin-bottom:20px">상세 성적표는 선생님이 확인 후 전달해 드립니다.</p>
+  <button class="btn primary" onclick=" session=null;showScreen('landing')">처음으로</button>`;
+ session = null;
+}
+
+function buildDoc(s){
+ return { id:s.id, student:s.student, level:s.level, preBands:s.preBands||null, preScore:s.preScore??null, pre:s.pre||{}, answers:s.answers, times:s.times,
+  startedAt:s.startedAt, finishedAt:s.finishedAt, free:{score:null, feedback:'', by:''}, ai:null, createdAt:new Date().toISOString() };
+}
+function persistSession(){ try{ localStorage.setItem(LS_SESSION, JSON.stringify(session)); }catch(e){} }
+function tryResume(){
+ try{
+  const s = JSON.parse(localStorage.getItem(LS_SESSION)||'null');
+  if(!s || s.finished) return;
+  if(confirm(`${s.student.name} 학생의 진행 중인 시험이 있습니다. 이어서 할까요?`)){
+   session = s; $('tb-student').textContent = `${s.student.name} · ${s.student.grade}`; $('tb-student').classList.remove('hidden');
+   if(!s.level){ renderIntro('pre'); } else { const next = FLOW.find(k => s.times[k]===undefined) || 'writing'; renderIntro(next); }
+  } else localStorage.removeItem(LS_SESSION);
+ }catch(e){}
+}
+
+// ═══════════════════════ 저장 / 불러오기 ═══════════════════════
+async function saveDoc(doc){
+ let ok = false;
+ if(fdb){ try{ await fdb.collection(COL).doc(doc.id).set(doc); ok = true; }catch(e){ console.warn(e); } }
+ if(!ok){ const arr = loadLocal(); arr.push(doc); localStorage.setItem(LS_LOCAL, JSON.stringify(arr)); }
+ return ok;
+}
+async function updateDoc(id, patch){
+ let ok=false;
+ if(fdb){ try{ await fdb.collection(COL).doc(id).update(patch); ok=true; }catch(e){ console.warn(e); } }
+ const arr = loadLocal(); const i = arr.findIndex(d=>d.id===id);
+ if(i>=0){ Object.assign(arr[i], patch); localStorage.setItem(LS_LOCAL, JSON.stringify(arr)); }
+ const j = allDocs.findIndex(d=>d.id===id); if(j>=0) Object.assign(allDocs[j], patch);
+ return ok;
+}
+async function deleteDoc(id){
+ if(fdb){ try{ await fdb.collection(COL).doc(id).delete(); }catch(e){} }
+ const arr = loadLocal().filter(d=>d.id!==id); localStorage.setItem(LS_LOCAL, JSON.stringify(arr));
+ allDocs = allDocs.filter(d=>d.id!==id); renderResults();
+}
+function loadLocal(){ try{ return JSON.parse(localStorage.getItem(LS_LOCAL)||'[]'); }catch(e){ return []; } }
+let allDocs = [];
+let listening = false;
+function listenDocs(){
+ const merge = cloud => { const local = loadLocal().filter(d => !cloud.some(c=>c.id===d.id)); allDocs = [...cloud, ...local].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')); renderResults(); };
+ if(fdb && !listening){
+  listening = true;
+  fdb.collection(COL).onSnapshot(snap => { $('sync-status').textContent = ' 클라우드 동기화 완료'; merge(snap.docs.map(d=>d.data())); },
+   err => { console.warn(err); $('sync-status').textContent = ' 클라우드 연결 실패 · 이 기기의 데이터만 표시'; merge([]); });
+ } else if(!fdb){ $('sync-status').textContent = '이 기기의 데이터'; merge([]); }
+}
+
+// ═══════════════════════ 분석 엔진 ═══════════════════════
+function norm(s){ return String(s||'').toLowerCase().replace(/['’]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim(); }
+function absIdx(level, pct, perfect){
+ if(level===3 && perfect) return 8;
+ const T = {1:[[90,4],[75,3],[55,2],[35,1],[0,0]], 2:[[90,6],[75,5],[55,4],[35,3],[0,2]], 3:[[85,7],[65,6],[45,5],[0,4]]};
+ for(const [th,i] of T[level]) if(pct>=th) return i;
+ return 0;
+}
+function gradeOf(pct){ return pct>=90?'A':pct>=80?'B':pct>=70?'C':pct>=60?'D':'E'; }
+const GRADE_COLOR = {A:'#2E9E6B',B:'#1C5FA6',C:'#B27A00',D:'#C2410C',E:'#6B7280'};
+function gradeBadge(pct, size=14){ const g=gradeOf(pct); return `<span style="display:inline-flex;align-items:center;justify-content:center;min-width:${size*2}px;height:${size*2}px;padding:0 ${size*0.5}px;border-radius:${size*0.5}px;background:${GRADE_COLOR[g]};color:#fff;font-family:var(--font-en);font-weight:800;font-size:${size}px;line-height:1">${g}</span>`; }
+function lvName(i){ return i<=5 ? `초등학교 ${i+1}학년 수준` : i===6 ? '중학교 1학년 수준' : i===7 ? '중학교 2학년 수준' : '중학교 2학년 이상 수준'; }
+function gradeIdx(g){ return Math.max(0, GRADES.indexOf(g)); }
+function vocabLevelBySize(n){ return n<250?'초등 1~2학년':n<450?'초등 3~4학년':n<800?'초등 5~6학년':n<1200?'중학교 1학년':n<1700?'중학교 2학년':'중학교 2학년 이상'; }
+
+function analyze(doc, peers, lite=false){
+ const B = BANK[doc.level]; const L = doc.level;
+ const items = []; // {id, domain, tag, ok, pts, max, csat, band, word, gp}
+ const hasPre = doc.pre && Object.keys(doc.pre).length>0;
+ if(hasPre) PRETEST.forEach(q =>items.push({id:q.id, domain:'pre', tag:'PRE', ok: doc.pre[q.id]===q.ans, pts:0, max:0, csat:!!q.csat, band:q.band===3?'mid':'elem', word:q.word, chosen:doc.pre[q.id]}));
+ B.vocab.forEach(q =>items.push({id:q.id, domain:'vocab', tag:q.tag, ok: doc.answers.vocab[q.id]===q.ans, pts: doc.answers.vocab[q.id]===q.ans?2:0, max:2, csat:!!q.csat, band:q.band, word:q.word, chosen:doc.answers.vocab[q.id]}));
+ B.grammar.forEach(q =>items.push({id:q.id, domain:'grammar', tag:q.tag, gp:q.gp, ok: doc.answers.grammar[q.id]===q.ans, pts: doc.answers.grammar[q.id]===q.ans?2:0, max:2, csat:!!q.csat, chosen:doc.answers.grammar[q.id]}));
+ B.reading.forEach(p =>p.qs.forEach(q =>items.push({id:q.id, domain:'reading', tag:q.tag, ok: doc.answers.reading[q.id]===q.ans, pts: doc.answers.reading[q.id]===q.ans?4:0, max:4, chosen:doc.answers.reading[q.id]})));
+ B.writing.forEach(q => {
+  const v = doc.answers.writing[q.id]||'';
+  if(q.type==='free'){ const sc = doc.free && doc.free.score!=null ? doc.free.score : null; items.push({id:q.id, domain:'writing', tag:q.tag, free:true, graded: sc!=null, ok: sc!=null && sc>=7, pts: sc||0, max:q.pts, text:v}); }
+  else { const ok = q.accept.some(a =>norm(a)===norm(v)); items.push({id:q.id, domain:'writing', tag:q.tag, ok, pts: ok?q.pts:0, max:q.pts, text:v}); }
+ });
+ const dom = {};
+ ['vocab','grammar','reading','writing'].forEach(d => {
+  const its = items.filter(i=>i.domain===d);
+  const pts = its.reduce((a,i)=>a+i.pts,0), max = its.reduce((a,i)=>a+i.max,0);
+  const pct = Math.round(pts/max*100);
+  const obj = its.filter(i=>!i.free); const perfect = obj.every(i=>i.ok) && (d!=='writing' || its.find(i=>i.free).graded ? its.every(i=>i.ok) : true);
+  const autoIts = its.filter(i=>!i.free); const autoPct = Math.round(autoIts.reduce((a,i)=>a+i.pts,0)/autoIts.reduce((a,i)=>a+i.max,0)*100);
+  dom[d] = {pts, max, pct, autoPct, idx: absIdx(L, pct, perfect), n: its.length, correct: its.filter(i=>i.ok).length};
+ });
+ const total = Object.values(dom).reduce((a,d)=>a+d.pts,0);
+ const objAll = items.filter(i=>i.domain!=='pre' && !i.free);
+ const freeItem = items.find(i=>i.free);
+ const perfectAll = objAll.every(i=>i.ok) && (!freeItem.graded || freeItem.ok);
+ const totalIdx = absIdx(L, total, perfectAll);
+ // 평가 항목별
+ const tags = {};
+ items.filter(i=>i.domain!=='pre' && !(i.free && !i.graded)).forEach(i => { const t = tags[i.tag] || (tags[i.tag]={tag:i.tag, ...TAGS[i.tag], n:0, ok:0}); t.n++; if(i.ok) t.ok++; });
+ Object.values(tags).forEach(t =>t.pct = Math.round(t.ok/t.n*100));
+ // 문법 항목별
+ const gps = {};
+ items.filter(i=>i.domain==='grammar').forEach(i => { const g = gps[i.gp] || (gps[i.gp]={gp:i.gp, n:0, ok:0, csat:false}); g.n++; if(i.ok) g.ok++; if(i.csat) g.csat=true; });
+ // 어휘 지표
+ const vocabItems = items.filter(i=>i.domain==='pre'||i.domain==='vocab');
+ const elem = vocabItems.filter(i=>i.band==='elem'), mid = vocabItems.filter(i=>i.band==='mid');
+ const elemPct = elem.length ? Math.round(elem.filter(i=>i.ok).length/elem.length*100) : null;
+ const midPct = mid.length ? Math.round(mid.filter(i=>i.ok).length/mid.length*100) : null;
+ const elemEst = elemPct!=null ? elemPct : (doc.level===3 ? 100 : 0);
+ const midEst = midPct!=null ? midPct : 0;
+ const vocabSize = Math.round((800*elemEst/100 + 1000*midEst/100)/50)*50;
+ const csatV = vocabItems.filter(i=>i.csat); const csatVPct = csatV.length ? Math.round(csatV.filter(i=>i.ok).length/csatV.length*100) : null;
+ const csatG = items.filter(i=>i.domain==='grammar'&&i.csat); const csatGPct = csatG.length ? Math.round(csatG.filter(i=>i.ok).length/csatG.length*100) : null;
+ const missedWords = vocabItems.filter(i=>!i.ok).map(i=>i.word);
+ // 상대 평가
+ if(lite) return { items, dom, total, totalIdx, perfectAll, tags, gps: Object.values(gps), elemPct, midPct, vocabSize, csatVPct, csatGPct, csatVn: csatV.length, csatGn: csatG.length, missedWords, freeItem, rank:1, nGrade:1, topPct:100, levelTagAvg:{}, nLevel:0, gradeDomAvg:{}, gradeDomRank:Object.fromEntries(['vocab','grammar','reading','writing'].map(d=>[d,{rank:1,n:1,top:100}])), gradeDist:[totalIdx] };
+ const sameGrade = peers.filter(p =>p.student.grade===doc.student.grade && p.id!==doc.id);
+ const gradePeerTotals = sameGrade.map(p =>analyzeLite(p).total);
+ const rank = gradePeerTotals.filter(t =>t>total).length + 1, nGrade = sameGrade.length+1;
+ const topPct = Math.round(rank/nGrade*100);
+ const sameLevel = peers.filter(p =>p.level===doc.level && p.id!==doc.id);
+ const levelTagAvg = {};
+ if(sameLevel.length){
+  const acc = {};
+  sameLevel.forEach(p => { const a = analyzeLite(p); Object.values(a.tags).forEach(t => { (acc[t.tag]=acc[t.tag]||[]).push(t.pct); }); });
+  Object.keys(acc).forEach(k =>levelTagAvg[k] = Math.round(acc[k].reduce((a,b)=>a+b,0)/acc[k].length));
+ }
+ const gradeDomAvg = {};
+ if(sameGrade.length){
+  const acc = {vocab:[],grammar:[],reading:[],writing:[],total:[]};
+  sameGrade.forEach(p => { const a = analyzeLite(p); ['vocab','grammar','reading','writing'].forEach(d=>acc[d].push(a.domIdx[d])); acc.total.push(a.totalIdx); });
+  Object.keys(acc).forEach(k =>gradeDomAvg[k] = acc[k].reduce((a,b)=>a+b,0)/acc[k].length);
+ }
+ const gradeDomRank = {};
+ ['vocab','grammar','reading','writing'].forEach(d => { const vals = sameGrade.map(p=>analyzeLite(p).domPct[d]); const r = vals.filter(v=>v>dom[d].pct).length+1; gradeDomRank[d] = {rank:r, n:nGrade, top:Math.round(r/nGrade*100)}; });
+ const gradeDist = [doc, ...sameGrade].map(p =>analyzeLite(p).totalIdx);
+ return { items, dom, total, totalIdx, perfectAll, tags, gps: Object.values(gps), elemPct, midPct, vocabSize, csatVPct, csatGPct, csatVn: csatV.length, csatGn: csatG.length, missedWords,
+  rank, nGrade, topPct, levelTagAvg, nLevel: sameLevel.length, gradeDomAvg, gradeDomRank, gradeDist, freeItem };
+}
+const _liteCache = {};
+function analyzeLite(p){
+ const k = p.id + ':' + (p.free&&p.free.score);
+ if(_liteCache[k]) return _liteCache[k];
+ const a = analyze(p, [], true);
+ const r = { total:a.total, totalIdx:a.totalIdx, tags:a.tags, domIdx:Object.fromEntries(Object.entries(a.dom).map(([d,v])=>[d,v.idx])), domPct:Object.fromEntries(Object.entries(a.dom).map(([d,v])=>[d,v.pct])) };
+ _liteCache[k] = r; return r;
+}
+
+// ═══════════════════════ 교사 모드 ═══════════════════════
+function openTeacher(skipPin){
+ if(skipPin || sessionStorage.getItem('wg_teacher')==='1'){ showScreen('teacher'); loadSettingsForm(); listenDocs(); renderResults(); return; }
+ $('ov-pin').classList.add('open'); $('pin-in').value=''; setTimeout(()=>$('pin-in').focus(),50);
+}
+function checkPin(){
+ if($('pin-in').value.trim()===getSettings().pin){ sessionStorage.setItem('wg_teacher','1'); closeOv('ov-pin'); openTeacher(true); }
+ else toast('PIN이 올바르지 않습니다.');
+}
+function teacherTab(t){
+ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===t));
+ ['results','papers','entry','settings'].forEach(k => $('tt-'+k).classList.toggle('hidden', k!==t));
+ if(t==='papers') renderPaper();
+ if(t==='entry') renderEntry();
+}
+let viewMode = 'all'; const openStu = new Set();
+function setViewMode(m){ viewMode = m; $('vm-all').classList.toggle('on', m==='all'); $('vm-student').classList.toggle('on', m==='student'); renderResults(); }
+function toggleStu(key){ if(openStu.has(key)) openStu.delete(key); else openStu.add(key); renderStudentView(); }
+function renderStudentView(){
+ const q = ($('f-name').value||'').trim(), g = $('f-grade').value, lv = $('f-level').value;
+ const groups = {};
+ allDocs.forEach(d => { const k = d.student.name+'|'+(d.student.school||''); (groups[k]=groups[k]||[]).push(d); });
+ let cards = Object.entries(groups).map(([k,arr]) => { arr.sort((x,y)=>(x.student.date+x.createdAt).localeCompare(y.student.date+y.createdAt)); return {k, arr, last:arr[arr.length-1]}; })
+  .filter(gr => (!q || gr.last.student.name.includes(q)) && (!g || gr.arr.some(d=>d.student.grade===g)) && (!lv || gr.arr.some(d=>String(d.level)===lv)))
+  .sort((x,y)=> x.last.student.name.localeCompare(y.last.student.name,'ko'));
+ const box = $('student-view');
+ if(!cards.length){ box.innerHTML = `<div class="card empty">해당하는 학생이 없습니다.</div>`; return; }
+ box.innerHTML = cards.map(gr => {
+  const rows = gr.arr.map(d => ({d, a: analyze(d, [], true)}));
+  const last = rows[rows.length-1], prev = rows.length>1 ? rows[rows.length-2] : null;
+  const diff = prev ? last.a.total - prev.a.total : null;
+  const open = openStu.has(gr.k);
+  return `<div class="stu-card">
+   <div class="stu-head" onclick="toggleStu('${gr.k.replace(/'/g,"\\'")}')">
+    <div><div class="nm">${esc(last.d.student.name)}</div><div class="meta">${esc(last.d.student.school||'')} ${last.d.student.grade} · 응시 ${rows.length}회 · 최근 ${last.d.student.date}</div></div>
+    <div class="kpi"><span>최근 총점 <b>${last.a.total}</b></span><span>${lvName(last.a.totalIdx)}</span><span>직전 대비 ${diff===null?'—':diff>0?`<span class="chip green">+${diff}</span>`:diff<0?`<span class="chip red">${diff}</span>`:'<span class="chip gray">0</span>'}</span><span class="chip gray">${open?'접기':'기록 보기'}</span></div>
+   </div>
+   ${open ? `<div class="stu-body">
+    ${rows.length>1 ? trendSVG(gr.arr, last.d.id) : `<table class="tbl"><thead><tr><th>응시일</th><th>시험지</th><th>총점</th><th>어휘</th><th>문법</th><th>독해</th><th>라이팅</th><th>수준</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.d.student.date}</td><td>Test ${r.d.level}</td><td><b>${r.a.total}</b></td><td>${r.a.dom.vocab.pct}%</td><td>${r.a.dom.grammar.pct}%</td><td>${r.a.dom.reading.pct}%</td><td>${r.a.dom.writing.pct}%</td><td>${lvName(r.a.totalIdx)}</td></tr>`).join('')}</tbody></table>`}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">${rows.map(r=>`<button class="btn sm primary" onclick="openReport('${r.d.id}')">${r.d.student.date} 성적표</button>`).join('')}</div>
+   </div>` : ''}
+  </div>`;
+ }).join('');
+}
+function renderResults(){
+ if($('scr-teacher').classList.contains('hidden')) return;
+ $('student-view').classList.toggle('hidden', viewMode!=='student');
+ $('results-table').parentElement.parentElement.classList.toggle('hidden', viewMode==='student');
+ if(viewMode==='student') renderStudentView();
+ const q = ($('f-name').value||'').trim(), g = $('f-grade').value, lv = $('f-level').value;
+ const rows = allDocs.filter(d => (!q || d.student.name.includes(q)) && (!g || d.student.grade===g) && (!lv || String(d.level)===lv));
+ const names = new Set(allDocs.map(d=>d.student.name+d.student.grade));
+ $('t-stats').innerHTML = `<div class="stat"><div class="l">총 응시 건수</div><div class="v">${allDocs.length}</div></div>
+  <div class="stat"><div class="l">응시 학생 수</div><div class="v">${names.size}</div></div>
+  ${[1,2,3].map(l=>`<div class="stat"><div class="l">${LEVELS[l].name} 응시</div><div class="v" style="color:${LEVELS[l].color}">${allDocs.filter(d=>d.level===l).length}</div></div>`).join('')}`;
+ if(!rows.length){ $('results-table').innerHTML = `<tr><td class="empty">아직 응시 결과가 없습니다.</td></tr>`; return; }
+ $('results-table').innerHTML = `<thead><tr><th>응시일</th><th>이름</th><th>학년</th><th>시험지</th><th>어휘</th><th>문법</th><th>독해</th><th>라이팅</th><th>총점</th><th>수준</th><th>자유작문</th><th></th></tr></thead><tbody>` +
+  rows.map(d => { const a = analyze(d, [], true); const L = LEVELS[d.level];
+   return `<tr><td>${d.student.date}</td><td><b>${esc(d.student.name)}</b>${(()=>{const h=studentHistory(d);return h.length>1?` <span class="chip gray" style="font-size:10px;padding:1px 6px">${h.findIndex(x=>x.id===d.id)+1}/${h.length}회</span>`:'';})()}<div class="muted" style="font-size:11px">${esc(d.student.school||'')}</div></td><td>${d.student.grade}</td>
+    <td><span class="chip" style="background:${L.color}22;color:${L.color}">${L.name}</span></td>
+    <td>${a.dom.vocab.pts}/24</td><td>${a.dom.grammar.pts}/24</td><td>${a.dom.reading.pts}/28</td><td>${a.dom.writing.pts}/24</td>
+    <td><b>${a.total}</b></td><td style="font-size:12px">${lvName(a.totalIdx)}</td>
+    <td>${a.freeItem.graded ? `<span class="chip green">${d.free.score}/9</span>` : `<button class="btn sm ghost" onclick="openGrade('${d.id}')">채점</button>`}</td>
+    <td style="white-space:nowrap"><button class="btn sm primary" onclick="openReport('${d.id}')">성적표</button> <button class="btn sm danger" onclick="if(confirm('삭제할까요?'))deleteDoc('${d.id}')">삭제</button></td></tr>`; }).join('') + '</tbody>';
+}
+
+// ── 자유 작문 채점 ──
+let gradingId = null;
+function openGrade(id){
+ gradingId = id; const d = allDocs.find(x=>x.id===id); const q = BANK[d.level].writing.find(w=>w.type==='free');
+ $('grade-text').textContent = d.answers.writing[q.id] || '(작성하지 않음)';
+ $('grade-score').value = d.free&&d.free.score!=null ? d.free.score : ''; $('grade-fb').value = d.free&&d.free.feedback || '';
+ $('ov-grade').classList.add('open');
+}
+async function saveFreeGrade(){
+ const sc = Math.max(0, Math.min(9, parseInt($('grade-score').value)||0));
+ await updateDoc(gradingId, {free:{score:sc, feedback:$('grade-fb').value.trim(), by: $('grade-fb').dataset.by||'teacher'}});
+ closeOv('ov-grade'); toast('채점을 저장했습니다.'); renderResults();
+ const gd = allDocs.find(x=>x.id===gradingId);
+ if(!$('scr-report').classList.contains('hidden') && reportId===gradingId){ if(gd && gd.ai) await generateAI(true); else openReport(reportId); }
+ else if(gd && gd.ai){ await updateDoc(gradingId, {ai:null}); }
+}
+
+// ═══════════════════════ 지면 답안 입력 ═══════════════════════
+let entry = null;
+function renderEntry(){
+  if(!entry){ entry = {pre:{}, answers:{vocab:{},grammar:{},reading:{},writing:{}}}; $('en-date').value = new Date().toISOString().slice(0,10); }
+}
+function entryPick(id, i, el){
+  const store = entry.answers[entry._domOf[id]];
+  store[id] = store[id]===i ? undefined : i;
+  el.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on')); if(store[id]!==undefined) el.classList.add('on');
+}
+function renderEntryMain(){
+  const lv = +$('en-level').value; const box = $('en-main');
+  if(!lv){ box.innerHTML=''; return; }
+  entry.level = lv; entry._domOf = {};
+  const B = BANK[lv]; let n=0; let html='';
+  const sec = (title, items, dom) => { html += `<h3 style="margin:16px 0 8px">${title}</h3><div class="entry-grid">`; items.forEach(q => { n++; entry._domOf[q.id]=dom; const st=entry.answers[dom]; html += `<div class="en-row"><span class="no">${n}</span>${[0,1,2,3].map(i=>`<button class="${st[q.id]===i?'on':''}" onclick="entryPick('${q.id}',${i},this)">${'①②③④'[i]}</button>`).join('')}</div>`; }); html += '</div>'; };
+  sec('어휘 (1~12번)', B.vocab, 'vocab'); sec('문법 (13~24번)', B.grammar, 'grammar'); sec('독해 (25~31번)', B.reading.flatMap(p=>p.qs), 'reading');
+  html += `<h3 style="margin:16px 0 8px">라이팅 (32~35번) — 학생이 쓴 그대로 입력</h3><div class="en-w">`;
+  B.writing.forEach(q => { n++; const v = entry.answers.writing[q.id]||''; html += `<div><label>${n}. ${q.q.replace(/<[^>]+>/g,'')} <b>[${esc(q.prompt)}]</b></label>${q.type==='free' ? `<textarea rows="3" oninput="entry.answers.writing['${q.id}']=this.value">${esc(v)}</textarea>` : `<input value="${esc(v)}" oninput="entry.answers.writing['${q.id}']=this.value">`}</div>`; });
+  box.innerHTML = html + '</div>';
+}
+function resetEntry(){ entry=null; $('en-name').value=''; $('en-school').value=''; $('en-grade').value=''; $('en-level').value=''; $('en-main').innerHTML=''; renderEntry(); }
+async function saveEntry(){
+  const name=$('en-name').value.trim(), grade=$('en-grade').value;
+  if(!name) return toast('이름을 입력해 주세요.'); if(!grade) return toast('학년을 선택해 주세요.'); if(!entry.level) return toast('응시한 시험지를 선택해 주세요.');
+  const cleanAns = o => Object.fromEntries(Object.entries(o).filter(([k,v])=>v!==undefined));
+  const doc = { id:'a_'+Date.now(), mode:'paper', student:{name, grade, school:$('en-school').value.trim(), cls:'', date:$('en-date').value||new Date().toISOString().slice(0,10)},
+    level: entry.level, preBands: null, preScore: null, pre: {},
+    answers: {vocab:cleanAns(entry.answers.vocab), grammar:cleanAns(entry.answers.grammar), reading:cleanAns(entry.answers.reading), writing:cleanAns(entry.answers.writing)},
+    times:{}, startedAt:new Date().toISOString(), finishedAt:new Date().toISOString(), free:{score:null,feedback:'',by:''}, ai:null, createdAt:new Date().toISOString() };
+  const ok = await saveDoc(doc);
+  if(!allDocs.some(d=>d.id===doc.id)){ allDocs.unshift(doc); }
+  toast(ok ? '저장했습니다. 성적표를 엽니다.' : '이 기기에 저장했습니다. 성적표를 엽니다.');
+  resetEntry(); openReport(doc.id);
+}
+
+// ═══════════════════════ 인쇄용 시험지 ═══════════════════════
+function paperHTML(sel, showAns){
+ let html='';
+ const opts = (q, ans) => { const ko=/[가-힣]/.test(q.opts.join('')); return `<div class="popts ${ko?'ko':''}">${q.opts.map((o,i)=>`<span>${'①②③④'[i]} ${o}</span>`).join('')}</div>${ans?`<div class="ans">정답: ${'①②③④'[q.ans]}</div>`:''}`; };
+ if(sel==='pre'){
+  html = `<div class="ph"><h1>영어 어휘 Pre-test</h1><div class="muted">15문항 · 5분 · 모르는 문제는 비워 두어도 됩니다</div></div><div class="info"><span>이름: __________</span><span>학년: ______</span><span>점수: ______ / 15</span></div>`;
+  PRETEST.forEach((q,i)=>html += `<div class="pq"><div class="inst">${i+1}. ${VTYPE[q.type]}${showAns?` <span class="muted">(band ${q.band})</span>`:''}</div><div class="stem">${q.type==='def'?'"'+q.q+'"':q.q}</div>${opts(q,showAns)}</div>`);
+  if(showAns) html += `<div class="sec">추천 규칙</div><p style="font-size:13px">band1(초3~4, 1~5번) 정답 ≤3 → Test 1 · band2(초5~6, 6~10번) ≤3 → Test 2 · band3(중1~2, 11~15번) ≥3 → Test 3, 그 외 Test 2</p>`;
+ } else {
+  const lv = +sel, B = BANK[lv], L = LEVELS[lv]; let n=0;
+  html = `<div class="ph"><h1>영어 성취도 평가 · ${L.name} ${L.label}</h1><div class="muted">${L.range} · 총 100점 · 40분</div></div><div class="info"><span>이름: __________</span><span>학년: ______</span><span>점수: ______ / 100</span></div>`;
+  html += `<div class="sec">Section 1. 어휘 Vocabulary (12문항 × 2점 · 8분)</div>`;
+  B.vocab.forEach(q => { n++; html += `<div class="pq"><div class="inst">${n}. ${VTYPE[q.type]}</div><div class="stem">${q.type==='def'?'"'+q.q+'"':q.q}</div>${opts(q,showAns)}</div>`; });
+  html += `<div class="sec pb">Section 2. 문법 Grammar (12문항 × 2점 · 10분)</div>`;
+  B.grammar.forEach(q => { n++; html += `<div class="pq"><div class="stem">${n}. ${q.q}</div>${opts(q,showAns)}${showAns?`<div class="muted" style="font-size:11px">${q.gp}${q.csat?' · 수능 기출 항목':''}</div>`:''}</div>`; });
+  html += `<div class="sec pb">Section 3. 독해 Reading (7문항 × 4점 · 14분)</div>`;
+  B.reading.forEach(p => { html += `<div class="passage"><div class="pt">${p.title}</div>${p.text}</div>`; p.qs.forEach(q => { n++; html += `<div class="pq"><div class="stem" style="font-family:var(--font)">${n}. ${q.q}</div>${opts(q,showAns)}</div>`; }); });
+  html += `<div class="sec pb">Section 4. 라이팅 Writing (4문항 · 24점 · 8분)</div>`;
+  B.writing.forEach(q => { n++; html += `<div class="pq"><div class="inst">${n}. ${q.q} <b>(${q.pts}점)</b></div><div class="stem">${esc(q.prompt)}</div>${showAns?`<div class="ans">${q.type==='free'?'채점 기준: '+q.rubric:'정답: '+q.model}</div>`:'<div class="wline"></div>'+(q.type==='free'?'<div class="wline"></div><div class="wline"></div><div class="wline"></div>':'')}</div>`; });
+ }
+ return html;
+}
+function renderPaper(){ $('paper').innerHTML = paperHTML($('paper-sel').value, $('paper-ans').checked); }
+
+// 답안지(OMR)
+function answerSheetHTML(sel){
+ const isPre = sel==='pre'; const title = isPre ? '영어 어휘 Pre-test 답안지' : `영어 성취도 평가 ${LEVELS[+sel].name} 답안지`;
+ const n = isPre ? 15 : 31;
+ const row = i => `<tr><td class="no">${i}</td>${['①','②','③','④'].map(c=>`<td class="bub">${c}</td>`).join('')}</tr>`;
+ const col = (from,to) => `<table class="omr"><tr><th>번호</th><th colspan="4">답</th></tr>${Array.from({length:to-from+1},(_,k)=>row(from+k)).join('')}</table>`;
+ const cols = isPre ? [col(1,15)] : [col(1,11), col(12,22), col(23,31)];
+ let html = `<div class="ph"><h1>${title}</h1><div class="muted">정답이라고 생각하는 번호를 진하게 칠하세요 ●</div></div>
+  <div class="info"><span>이름: __________</span><span>학년: ______</span><span>학교: __________</span><span>날짜: ____ . ____ . ____</span></div>
+  <div class="omr-wrap">${cols.join('')}</div>`;
+ if(!isPre){
+  const B = BANK[+sel]; let k=31;
+  html += `<div class="sec">Section 4. 라이팅 Writing</div>`;
+  B.writing.forEach(q => { k++; html += `<div class="pq"><div class="inst">${k}. ${q.q.replace(/<[^>]+>/g,'')} (${q.pts}점)</div><div class="stem">${esc(q.prompt)}</div><div class="wline"></div>${q.type==='free'?'<div class="wline"></div><div class="wline"></div><div class="wline"></div>':''}</div>`; });
+  html += `<div class="score-box"><span>어휘 ____/24</span><span>문법 ____/24</span><span>독해 ____/28</span><span>라이팅 ____/24</span><span><b>총점 ____/100</b></span></div>`;
+ } else html += `<div class="score-box"><span>band1 ____/5</span><span>band2 ____/5</span><span>band3 ____/5</span><span><b>배정 Level ____</b></span></div>`;
+ return html;
+}
+
+function printPaper(kind){
+ const sel = $('paper-sel').value;
+ const body = kind==='sheet' ? answerSheetHTML(sel) : paperHTML(sel, kind==='key');
+ const label = {student:'학생용 시험지', key:'교사용 정답지', sheet:'답안지'}[kind];
+ let area = $('print-area');
+ if(!area){ area = document.createElement('div'); area.id='print-area'; document.body.appendChild(area); }
+ area.innerHTML = `<div class="pp-bar no-print"><b>${label}</b> · 인쇄 대화상자가 뜨지 않으면 Ctrl+P(맥: Cmd+P)를 누르세요. <button class="btn primary sm" onclick="window.print()">인쇄</button> <button class="btn ghost sm" onclick="closePrint()">닫기</button></div><div class="pp-body">${body}</div>`;
+ document.body.classList.add('print-mode');
+ const prevTitle = document.title; document.title = label;
+ const done = () => { document.title = prevTitle; window.removeEventListener('afterprint', done); };
+ window.addEventListener('afterprint', done);
+ setTimeout(()=>window.print(), 300);
+}
+function closePrint(){ document.body.classList.remove('print-mode'); const a=$('print-area'); if(a) a.innerHTML=''; }
+
+// ═══════════════════════ 성적표 ═══════════════════════
+let reportId = null;
+function openReport(id){
+ reportId = id; const d = allDocs.find(x=>x.id===id); if(!d) return;
+ const a = analyze(d, allDocs);
+ const hist = studentHistory(d);
+ const S = getSettings(); const L = LEVELS[d.level];
+ const gIdx = gradeIdx(d.student.grade);
+ const domRow = (key) => { const v=a.dom[key]; const r=a.gradeDomRank[key]; return `<tr><td><b>${DOMAINS[key].label}</b> <span class="muted">${DOMAINS[key].en}</span></td><td>${v.pts} / ${v.max}</td><td><div class="bar"><i style="width:${v.pct}%;background:${L.color}"></i></div></td><td>${v.pct}%</td><td>${lvName(v.idx)}</td></tr>`; };
+ const tagOrder = ['V1','V2','V3','V4','GA','GB','R1','R2','R3','R4','W1','W2','W3','W4'];
+ const tagBars = tagOrder.filter(t=>a.tags[t]).map(t => { const v=a.tags[t]; const avg=a.levelTagAvg[t]; return `<div class="hbar-row"><div class="lbl">${TAGS[t].label}</div><div class="hbar"><div class="me" style="width:${Math.max(8,v.pct)}%">${v.pct}%</div>${avg!=null?`<div class="avg" style="width:${Math.max(8,avg)}%">${avg}%</div>`:`<div class="none" style="width:30%">동일 레벨 자료 없음</div>`}</div></div>`; }).join('');
+ const weak = [];
+ Object.values(a.tags).filter(t=>t.pct<60).forEach(t =>weak.push({area:DOMAINS[t.domain].label, item:t.label, why:`정답률 ${t.pct}% (${t.ok}/${t.n})`}));
+ const wg = a.gps.filter(g=>g.ok<g.n); if(wg.length) weak.push({area:'문법 항목', item:'틀린 문법 항목 복습', why: wg.map(g=>g.gp).join(', ')});
+ if(a.missedWords.length) weak.push({area:'어휘', item:'틀린 단어 복습', why:a.missedWords.join(', ')});
+ const gpTable = a.gps.map(g => `<tr><td>${g.gp}</td><td>${g.ok} / ${g.n}</td><td>${g.ok===g.n?'<span class="chip green">완료</span>':g.ok>0?'<span class="chip amber">보완</span>':'<span class="chip red">학습 필요</span>'}</td></tr>`).join('');
+ const ai = d.ai;
+ const clean = t => String(t||'').replace(/동학년\s*응시자\s*\d+명\s*중\s*\d+등(으로|입니다|이며|이고)?\s*/g,'').split(/(?<=[.!?])\s+/).filter(x => !/동학년|응시자|상위\s*\d+%|\d+명\s*중|석차/.test(x) && x.trim().length>6 && !/^(에|으로|이며|이고)\s/.test(x.trim())).join(' ').replace(/\s{2,}/g,' ');
+ const presc = (arr) => (arr||[]).map((p,i)=>`<div class="presc-item"><div class="n">${String(i+1).padStart(2,'0')}.</div><div>${esc(clean(p))}</div></div>`).join('');
+ const csatVok = Math.round((a.csatVPct||0)/100*a.csatVn);
+ const csatGok = Math.round((a.csatGPct||0)/100*a.csatGn);
+ const csatVText = a.csatVn>=5 ? `${a.csatVn}개 중 <b>${csatVok}개</b> 정답 <small>학년 수준 난이도로 출제</small>` : `<span class="ko" style="font-size:12px;color:var(--text3)">중등 레벨 응시 시 확인</span>`;
+ const csatGText = a.csatGn>=4 ? `${a.csatGn}개 중 <b>${csatGok}개</b> 정답 <small>학년 수준 난이도로 출제</small>` : `<span class="ko" style="font-size:12px;color:var(--text3)">초등 심화 이상 응시 시 확인</span>`;
+
+ const B = BANK[d.level]; const strip = t => String(t||'').replace(/<br\s*\/?>/g,' / ').replace(/<[^>]+>/g,'');
+ const itemRows = []; let qn = 0;
+ const mc = (q, chosen, label, no) => itemRows.push({id:q.id, kind:'mc', no, dom:label, text: strip(q.type==='def'?'"'+q.q+'"':q.q), chosen, opts:q.opts, mine: chosen===undefined?'무응답':'①②③④'[chosen]+' '+strip(q.opts[chosen]), ans:'①②③④'[q.ans]+' '+strip(q.opts[q.ans]), ok: chosen===q.ans});
+ if(d.pre && Object.keys(d.pre).length) PRETEST.forEach((q,i) => mc(q, d.pre[q.id], 'Pre', 'P'+(i+1)));
+ B.vocab.forEach(q => mc(q, d.answers.vocab[q.id], '어휘', ++qn));
+ B.grammar.forEach(q => mc(q, d.answers.grammar[q.id], '문법', ++qn));
+ B.reading.forEach(p => p.qs.forEach(q => mc(q, d.answers.reading[q.id], '독해', ++qn)));
+ B.writing.forEach(q => { const v = d.answers.writing[q.id]||''; const it = a.items.find(x=>x.id===q.id); itemRows.push({id:q.id, kind:'w', free:q.type==='free', no:++qn, dom:'라이팅', text: strip(q.q)+' ['+q.prompt+']', raw:v, mine: v||'무응답', ans: q.type==='free' ? (it.graded?`${d.free.score}/9점`:'미채점') : q.model, ok: q.type==='free' ? (it.graded?it.ok:null) : it.ok}); });
+ const wrongN = itemRows.filter(r=>r.ok===false).length;
+ const itemTable = `<table class="dom-table"><thead><tr><th>번호</th><th>영역</th><th style="width:40%">문항</th><th>학생 답</th><th>정답</th><th>결과</th></tr></thead><tbody>${itemRows.map(r=>`<tr style="${r.ok===false?'background:var(--red-l)':''}"><td>${r.no}</td><td style="white-space:nowrap">${r.dom}</td><td style="font-size:12px">${esc(r.text)}</td><td style="font-family:var(--font-en)">${r.kind==='mc' ? `<select class="ans-edit" data-id="${r.id}" data-dom="${r.dom==='Pre'?'pre':''}" style="padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-family:inherit"><option value="">무응답</option>${r.opts.map((o,i)=>`<option value="${i}" ${r.chosen===i?'selected':''}>${'①②③④'[i]} ${esc(strip(o).slice(0,14))}</option>`).join('')}</select>` : r.free ? `<textarea class="ans-edit" data-id="${r.id}" rows="2" style="width:100%;min-width:160px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-family:inherit">${esc(r.raw)}</textarea>` : `<input class="ans-edit" data-id="${r.id}" value="${esc(r.raw)}" style="width:100%;min-width:140px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-family:inherit">`}</td><td style="font-family:var(--font-en);white-space:nowrap;font-size:12px">${esc(r.ans.length>22?r.ans.slice(0,22)+'…':r.ans)}</td><td>${r.ok===null?'<span class="chip gray">-</span>':r.ok?'<span class="chip green">O</span>':'<span class="chip red">X</span>'}</td></tr>`).join('')}</tbody></table>`;
+
+ $('report').innerHTML = `<div class="report">
+  <div class="rp-head">
+   <div class="eyebrow">${esc(S.academy)} · English Achievement Report</div>
+   <h1>${esc(d.student.name)} 학생 영어 실력 진단 성적표</h1>
+   <div class="rp-meta">
+    <div><div class="l">학교 / 학년</div><div class="v">${esc(d.student.school||'—')} ${d.student.grade}</div></div>
+    <div><div class="l">응시일</div><div class="v">${d.student.date}</div></div>
+    <div><div class="l">응시 시험지</div><div class="v">${L.name} ${L.label}</div></div>
+    ${d.student.cls?`<div><div class="l">현재 반</div><div class="v">${d.student.cls}</div></div>`:''}
+   </div>
+  </div>
+  <div class="rp-body">
+   <div class="rp-sec">
+    <h2>1. 종합 평가 결과</h2>
+    <div class="summary-grid">
+     <div class="score-hero"><div class="muted">총점 (100점 만점)</div><div class="num">${a.total}</div>
+      <div class="lv">${lvName(a.totalIdx)}<small>절대평가 · 교육과정 성취기준 대비</small></div>
+      ${a.totalIdx===8?`<div class="chip purple" style="margin-top:8px">중학교 2학년 수준 문항 전부 정답 — 중등 2학년 이상 수준</div>`:''}
+      ${!a.freeItem.graded?`<div class="chip amber" style="margin-top:8px">자유 작문 미채점 (9점 제외 상태)</div>`:''}
+     </div>
+     <div class="kv">
+      <div><div class="l">문법 수준<br>Grammar Level</div><div class="v blue" style="font-size:14px">${lvName(a.dom.grammar.idx)}</div></div>
+      <div><div class="l">교육과정 필수 어휘<br>초등 800개 기준</div><div class="v blue">${a.elemPct!=null?`약 ${a.elemPct}%`:'—'}<small>${a.elemPct!=null?'알고 있음':'중등 레벨은 초등 어휘 완료로 간주'}</small></div></div>
+      <div><div class="l">추정 어휘량<br>Vocabulary Size</div><div class="v blue">약 ${a.vocabSize.toLocaleString()}<small>단어</small></div></div>
+      <div><div class="l">어휘 수준<br>Vocabulary Level</div><div class="v blue" style="font-size:14px">${vocabLevelBySize(a.vocabSize)}</div></div>
+     </div>
+    </div>
+   </div>
+
+   <div class="rp-sec">
+    <h2>2. 영역별 실력 진단</h2>
+    <table class="dom-table"><thead><tr><th>영역</th><th>점수</th><th style="width:28%">정답률</th><th></th><th>절대평가(수준)</th></tr></thead>
+    <tbody>${['vocab','grammar','reading','writing'].map(domRow).join('')}</tbody></table>
+    <p class="ai-note">절대평가는 응시한 시험지의 정답률을 2022 개정 교육과정 학년군 성취기준에 대응시킨 추정 수준입니다.</p>
+   </div>
+
+   ${hist.length>1 ? `<div class="rp-sec">
+    <h2>점수 추이 (${hist.length}회 응시)</h2>
+    ${trendSVG(hist, d.id)}
+    <p class="ai-note">시험지 레벨이 다른 회차는 난이도가 달라 점수를 단순 비교하기 어렵습니다. '수준' 열의 절대평가 결과로 성장을 확인하세요.</p>
+   </div>` : ''}
+   <div class="rp-sec">
+    <h2>3. 어휘 · 문법 세부 지표</h2>
+    <h3>어휘 Vocabulary</h3>
+    <div class="metric-grid">
+     <div class="metric"><div class="l">Vocabulary Size</div><div class="v">약 ${a.vocabSize.toLocaleString()}<small>단어 수준</small></div></div>
+     <div class="metric"><div class="l">Vocabulary 수준</div><div class="v"><span class="ko">${vocabLevelBySize(a.vocabSize)}</span></div></div>
+     <div class="metric"><div class="l">교육부 지정 필수 어휘<br>초등 800개 중</div><div class="v">${a.elemPct!=null?`약 ${a.elemPct}%`:'—'}<small>${a.elemPct!=null?'알고 있음':'중등 레벨은 초등 어휘 완료로 간주'}</small></div></div>
+     <div class="metric"><div class="l">교육부 지정 필수 어휘<br>중학 1,000개 중</div><div class="v">${a.midPct!=null?`약 ${a.midPct}%`:'—'}<small>${a.midPct!=null?'알고 있음':'중등 레벨 응시 시 측정'}</small></div></div>
+     <div class="metric"><div class="l">수능 빈출 어휘와 겹치는<br>단어 기초 확인</div><div class="v">${csatVText}</div></div>
+    </div>
+    <h3>문법 Grammar</h3>
+    <div class="metric-grid">
+     <div class="metric"><div class="l">Grammar 수준</div><div class="v"><span class="ko">${lvName(a.dom.grammar.idx)}</span></div></div>
+     <div class="metric"><div class="l">수능 빈출 문법 항목의<br>기초 개념 확인</div><div class="v">${csatGText}</div></div>
+    </div>
+    <p class="ai-note">필수 어휘 비율은 본 시험에 출제된 표본 어휘의 정답률로 추정한 값입니다. (교육과정 기본 어휘: 초등 800 · 중학 누적 1,800 · 고교 누적 3,000)<br>'수능 빈출 확인'은 수능 어법·어휘에서 자주 다뤄지는 항목(수일치·시제·태·관계사·비교 등)의 기초 개념을 <b>학생 학년 수준의 난이도</b>로 출제해 확인한 결과이며, 실제 수능 난이도 문제를 풀 수 있다는 뜻은 아닙니다.</p>
+   </div>
+
+   <div class="rp-sec">
+    <h2>4. 영역별 수준 그래프</h2>
+    <div class="chart-grid">
+     ${['vocab','grammar','reading','writing'].map(k => `<div class="chart-box"><div class="t">${DOMAINS[k].label} ${DOMAINS[k].en}</div>${distSVG(a.dom[k].idx, null, gIdx, null, L.color)}</div>`).join('')}
+    </div>
+    <div class="legend"><span><i style="background:#5B8DD9"></i> 학년별 기준 분포 (교육과정 기준)</span><span><i style="background:var(--amber);border-radius:50%"></i> 내 수준</span></div>
+   </div>
+
+   <div class="rp-sec">
+    <h2>5. 문법 항목별 진단</h2>
+    <table class="dom-table"><thead><tr><th>문법 항목</th><th>정답</th><th>판정</th></tr></thead><tbody>${gpTable}</tbody></table>
+   </div>
+
+   <div class="rp-sec">
+    <h2>6. 약점 관리</h2>
+    ${weak.length ? `<div class="weak-list">${weak.map((w,i)=>`<div class="weak"><div class="n">${String(i+1).padStart(2,'0')}</div><div><b>[${w.area}] ${esc(w.item)}</b><span>${esc(w.why)}</span></div></div>`).join('')}</div>` : `<p class="muted">모든 평가 항목에서 60% 이상의 정답률을 보였습니다. 훌륭해요!</p>`}
+   </div>
+
+   <div class="rp-sec">
+    <h2>7. 학습처방</h2>
+    ${ai ? `
+     ${ai.overall?`<p style="margin-bottom:14px;line-height:1.8">${esc(clean(ai.overall))}</p>`:''}
+     ${['vocab','grammar','reading','writing'].map(k => `<h3>${DOMAINS[k].label}</h3><div class="presc">${presc(ai.domains&&ai.domains[k])}</div>`).join('')}
+     ${d.editedAt && ai.createdAt && d.editedAt>ai.createdAt ? `<div class="chip amber" style="margin-bottom:10px">답안이 수정된 이후 생성되지 않은 처방입니다. 상단의 "학습처방 다시 생성"을 눌러 주세요.</div>`:''}
+     <p class="ai-note">채점 결과를 바탕으로 자동 생성된 처방입니다. 담당 교사가 검토했습니다.</p>`
+    : `<p class="muted">학습처방을 생성하는 중입니다…</p>`}
+   </div>
+
+   <div class="rp-sec">
+    <h2>8. 자유 작문</h2>
+    <div class="free-box">${esc(a.freeItem.text||'(작성하지 않음)')}</div>
+    <p style="margin-top:10px;font-size:13px">${a.freeItem.graded ? `<b>점수: ${d.free.score} / 9</b> · ${esc(d.free.feedback||'')}` : `<span class="chip amber">미채점</span> <button class="btn sm ghost no-print" onclick="openGrade('${d.id}')">채점하기</button>`}</p>
+   </div>
+   <div class="rp-sec no-print" id="item-detail">
+    <h2>문항별 채점 결과 <span class="muted" style="font-weight:500">(교사 확인용 · 인쇄되지 않음)</span></h2>
+    <p class="muted" style="margin-bottom:8px">오답 ${wrongN}문항 · 빨간 줄이 오답입니다. 학생 답 칸을 고친 뒤 저장하면 다시 채점됩니다. <button class="btn sm ghost" onclick="const t=$('item-table');t.classList.toggle('hidden');this.textContent=t.classList.contains('hidden')?'펼치기':'접기'">펼치기</button> <button class="btn sm primary" onclick="saveAnswerEdits('${d.id}')">답안 수정 저장</button></p>
+    <div id="item-table" class="hidden" style="overflow-x:auto">${itemTable}</div>
+   </div>
+  </div>
+  <div class="rp-foot">${esc(S.academy)} · 본 성적표는 2022 개정 교육과정 영어과 성취기준과 교육부 지정 기본 어휘를 기준으로 제작된 학원 자체 평가 결과입니다.<br>문의: 담당 교사에게 연락해 주세요.</div>
+ </div>`;
+ $('btn-ai').textContent = '학습처방 다시 생성';
+ showScreen('report');
+ if(!ai || (d.editedAt && ai.createdAt && d.editedAt>ai.createdAt)){ const rb = ruleBasedAI(d, a); rb.createdAt = new Date().toISOString(); updateDoc(d.id, {ai:rb}).then(()=>openReport(d.id)); }
+}
+
+// 교사 답안 수정
+async function saveAnswerEdits(id){
+  const d = allDocs.find(x=>x.id===id); if(!d) return;
+  const B = BANK[d.level]; const domOf = {};
+  B.vocab.forEach(q=>domOf[q.id]='vocab'); B.grammar.forEach(q=>domOf[q.id]='grammar'); B.reading.forEach(p=>p.qs.forEach(q=>domOf[q.id]='reading')); B.writing.forEach(q=>domOf[q.id]='writing');
+  const pre = {...d.pre}; const answers = {vocab:{...d.answers.vocab}, grammar:{...d.answers.grammar}, reading:{...d.answers.reading}, writing:{...d.answers.writing}};
+  let changed = 0;
+  document.querySelectorAll('#item-table .ans-edit').forEach(el => {
+    const qid = el.dataset.id;
+    if(el.tagName==='SELECT'){ const v = el.value===''?undefined:+el.value; const store = qid.startsWith('P') ? pre : answers[domOf[qid]]; if(store[qid]!==v){ changed++; if(v===undefined) delete store[qid]; else store[qid]=v; } }
+    else { const v = el.value; if((answers.writing[qid]||'')!==v){ changed++; answers.writing[qid]=v; } }
+  });
+  if(!changed) return toast('변경된 답이 없습니다.');
+  const bands = {1:0,2:0,3:0}; PRETEST.forEach(q => { if(pre[q.id]===q.ans) bands[q.band]++; });
+  const hasPre = Object.keys(pre).length>0;
+  const patch = {pre, answers, preBands: hasPre?bands:null, preScore: hasPre?bands[1]+bands[2]+bands[3]:null, editedAt:new Date().toISOString()};
+  await updateDoc(id, patch);
+  Object.keys(_liteCache).forEach(k => { if(k.startsWith(id+':')) delete _liteCache[k]; });
+  toast(`${changed}개 답을 수정하고 다시 채점했습니다.`);
+  openReport(id); $('item-table').classList.remove('hidden'); $('item-detail').scrollIntoView();
+}
+
+// 학생별 점수 추이
+function studentHistory(d){
+  const key = x => x.student.name + '|' + (x.student.school||'');
+  return allDocs.filter(x => key(x)===key(d)).sort((a,b)=> (a.student.date+a.createdAt).localeCompare(b.student.date+b.createdAt));
+}
+function trendSVG(hist, curId){
+  const W=760,H=210,pl=40,pr=20,pt=18,pb=46; const cw=W-pl-pr, ch=H-pt-pb; const n=hist.length;
+  const x = i => n===1 ? pl+cw/2 : pl + i/(n-1)*cw; const y = v => pt + ch - v/100*ch;
+  const series = [
+    {k:'total', label:'총점', col:'#1C5FA6', w:2.5},
+    {k:'vocab', label:'어휘', col:'#F0A500', w:1.5},
+    {k:'grammar', label:'문법', col:'#2E9E6B', w:1.5},
+    {k:'reading', label:'독해', col:'#7C3AED', w:1.5},
+    {k:'writing', label:'라이팅', col:'#D64545', w:1.5}
+  ];
+  const rows = hist.map(h => { const a = analyze(h, [], true); return {id:h.id, date:h.student.date, level:h.level, total:a.total, vocab:a.dom.vocab.pct, grammar:a.dom.grammar.pct, reading:a.dom.reading.pct, writing:a.dom.writing.pct, idx:a.totalIdx}; });
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;font-family:var(--font)">`;
+  [0,25,50,75,100].forEach(v => { svg += `<line x1="${pl}" y1="${y(v)}" x2="${pl+cw}" y2="${y(v)}" stroke="#E3E8EF"/><text x="${pl-6}" y="${y(v)+3}" font-size="9" text-anchor="end" fill="#8A94A6">${v}</text>`; });
+  series.forEach(sr => {
+    const pts = rows.map((r,i)=>`${x(i)},${y(r[sr.k])}`).join(' ');
+    if(n>1) svg += `<polyline points="${pts}" fill="none" stroke="${sr.col}" stroke-width="${sr.w}" stroke-linejoin="round" opacity="${sr.k==='total'?1:.75}"/>`;
+    rows.forEach((r,i) => { const cur = r.id===curId && sr.k==='total'; svg += `<circle cx="${x(i)}" cy="${y(r[sr.k])}" r="${sr.k==='total'?(cur?6:4.5):3}" fill="${sr.k==='total'?sr.col:'#fff'}" stroke="${sr.col}" stroke-width="1.5"/>`; if(sr.k==='total') svg += `<text x="${x(i)}" y="${y(r.total)-10}" font-size="11" font-weight="800" text-anchor="middle" fill="${sr.col}">${r.total}</text>`; });
+  });
+  rows.forEach((r,i) => { const anc = n>1 && i===0 ? 'start' : n>1 && i===n-1 ? 'end' : 'middle'; svg += `<text x="${x(i)}" y="${H-28}" font-size="10" text-anchor="${anc}" fill="${r.id===curId?'#1C5FA6':'#52606D'}" font-weight="${r.id===curId?800:500}">${r.date}</text><text x="${x(i)}" y="${H-15}" font-size="9" text-anchor="${anc}" fill="#8A94A6">Test ${r.level} · ${LEVEL_SCALE[r.idx]}</text>`; });
+  svg += '</svg>';
+  const legend = `<div class="legend">${series.map(sr=>`<span><i style="background:${sr.col}"></i>${sr.label}${sr.k==='total'?' (점)':' (%)'}</span>`).join('')}</div>`;
+  const table = `<table class="dom-table" style="margin-top:10px"><thead><tr><th>응시일</th><th>시험지</th><th>총점</th><th>어휘</th><th>문법</th><th>독해</th><th>라이팅</th><th>수준</th><th>변화</th></tr></thead><tbody>${rows.map((r,i)=>{ const diff = i>0 ? r.total-rows[i-1].total : null; return `<tr style="${r.id===curId?'background:var(--blue-l)':''}"><td>${r.date}</td><td>Test ${r.level}</td><td><b>${r.total}</b></td><td>${r.vocab}%</td><td>${r.grammar}%</td><td>${r.reading}%</td><td>${r.writing}%</td><td>${lvName(r.idx)}</td><td>${diff===null?'—':diff>0?`<span class="chip green">+${diff}</span>`:diff<0?`<span class="chip red">${diff}</span>`:'<span class="chip gray">0</span>'}</td></tr>`; }).join('')}</tbody></table>`;
+  return svg + legend + table;
+}
+
+// 동학년 분포 곡선 SVG
+function distSVG(myIdx, avgIdx, gIdx, dist, color){
+ const W=320,H=150,pl=16,pr=10,pt=14,pb=30; const cw=W-pl-pr, ch=H-pt-pb;
+ const x = i =>pl + (i/8)*cw;
+ let curve = [];
+ const gauss = (v,m,s)=>Math.exp(-((v-m)**2)/(2*s*s));
+ for(let i=0;i<=80;i++){ const v=i/10; let y=0;
+  if(dist && dist.length>=5) dist.forEach(dv =>y += gauss(v,dv,0.7)); else y = gauss(v,gIdx,1.3);
+  curve.push([v,y]); }
+ const mx = Math.max(...curve.map(c=>c[1]));
+ const pts = curve.map(([v,y]) => `${x(v).toFixed(1)},${(pt+ch-(y/mx)*ch).toFixed(1)}`).join(' ');
+ const area = `M${x(0)},${pt+ch} L${pts.replace(/ /g,' L')} L${x(8)},${pt+ch} Z`;
+ const yAt = v => { const c = curve[Math.round(v*10)]; return pt+ch-(c[1]/mx)*ch; };
+ let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;font-family:var(--font)">`;
+ s += `<path d="${area}" fill="#5B8DD9" opacity=".12"/><polyline points="${pts}" fill="none" stroke="#5B8DD9" stroke-width="1.8"/>`;
+ LEVEL_SCALE.forEach((l,i)=>s += `<line x1="${x(i)}" y1="${pt+ch}" x2="${x(i)}" y2="${pt+ch+3}" stroke="#bbb"/><text x="${x(i)}" y="${H-8}" font-size="9" text-anchor="middle" fill="#666">${l.replace(' 이상','+')}</text>`);
+ if(avgIdx!=null){ s += `<line x1="${x(avgIdx)}" y1="${pt+ch}" x2="${x(avgIdx)}" y2="${yAt(avgIdx)}" stroke="#2E9E6B" stroke-width="2"/><circle cx="${x(avgIdx)}" cy="${yAt(avgIdx)}" r="4.5" fill="#2E9E6B"/>`; }
+ s += `<line x1="${x(myIdx)}" y1="${pt+ch}" x2="${x(myIdx)}" y2="${yAt(myIdx)}" stroke="#F0A500" stroke-width="2.5"/><circle cx="${x(myIdx)}" cy="${yAt(myIdx)}" r="5.5" fill="#F0A500" stroke="#fff" stroke-width="1.5"/>`;
+ s += `<text x="${x(myIdx)}" y="${Math.max(10,yAt(myIdx)-9)}" font-size="9" font-weight="700" text-anchor="${myIdx>=7?'end':myIdx<=1?'start':'middle'}" fill="#B27A00">내 수준</text>`;
+ return s + '</svg>';
+}
+
+// ═══════════════════════ AI 학습처방 ═══════════════════════
+
+
+function ruleBasedAI(d, a){
+ const n = d.student.name; const L = LEVELS[d.level];
+ const lv = k =>lvName(a.dom[k].idx); const cmp = k => '';
+ const weakTags = Object.values(a.tags).filter(t=>t.pct<60);
+ const strongTags = Object.values(a.tags).filter(t=>t.pct>=85);
+ const tagIn = (dom, ok) =>Object.values(a.tags).filter(t=>t.domain===dom && (ok?t.pct>=85:t.pct<60)).map(t=>t.label);
+ const domText = (k, tips) => {
+  const w = tagIn(k,false), s = tagIn(k,true);
+  return [
+   `${n} 학생의 ${DOMAINS[k].label} 실력은 ${lv(k)}으로 ${cmp(k)} ${a.dom[k].pct>=75?'우수한 편입니다':a.dom[k].pct>=55?'평균 수준입니다':'보완이 필요합니다'}. ${s.length?`특히 '${s.join("', '")}' 항목은 안정적으로 해결했습니다.`:''} ${w.length?`반면 '${w.join("', '")}' 항목의 정답률이 낮아 집중 학습이 필요합니다.`:'항목별 편차가 크지 않아 고르게 학습하고 있습니다.'}`,
+   tips[0], tips[1]
+  ];
+ };
+ const domains = {
+  vocab: domText('vocab', [
+   `${a.elemPct!=null?`교육부 지정 초등 필수 어휘 800개 중 약 ${a.elemPct}%를 알고 있는 것으로 추정됩니다. `:''}${(a.elemPct??100)<70?'초등 필수 어휘를 주제별(가족·학교·날씨·감정·직업 등)로 묶어 하루 10개씩 철자와 뜻을 함께 익히고, 영영풀이로 확인하는 습관을 들이면 어휘의 뜻을 정확히 아는 힘이 길러집니다.':'초등 필수 어휘가 안정되어 있으므로 중학 필수 어휘로 확장하고, 반의어·유의어를 짝지어 외우는 방식으로 어휘 관계를 넓히는 것을 권장합니다.'}`,
+   `${a.missedWords.length?`이번 시험에서 틀린 단어(${a.missedWords.slice(0,8).join(', ')})는 예문과 함께 다시 정리해 주세요. `:''}단어를 문장 속에서 익히도록 짧은 예문 읽기와 빈칸 채우기 연습을 주 3회 이상 병행하면 문맥에서 단어를 활용하는 능력이 향상됩니다.`
+  ]),
+  grammar: domText('grammar', [
+   `${a.gps.filter(g=>g.ok<g.n).length?`틀린 문법 항목은 '${a.gps.filter(g=>g.ok<g.n).map(g=>g.gp).join("', '")}'입니다. 각 항목의 개념을 기본서로 다시 확인한 뒤, 같은 유형의 문제를 10문항 이상 반복해 풀어 규칙을 자동화하는 것이 필요합니다.`:'출제된 문법 항목을 모두 정확히 해결했습니다. 다음 학년군의 문법(시제 확장, 준동사, 관계사 등)을 미리 접해 보는 것을 권장합니다.'}`,
+   `문법 개념을 외우는 데서 그치지 않고, 문장을 직접 써 보며 어법에 맞게 사용하는 연습(문장 전환·오류 고치기)을 주 2회 진행하면 어법성 판단 능력이 함께 향상됩니다.`
+  ]),
+  reading: domText('reading', [
+   `${a.dom.reading.pct>=75?'글의 주제와 세부 사항을 잘 파악하고 있습니다. 조금 더 긴 지문(150~200단어)의 논픽션 글을 읽고 주제문과 뒷받침 문장을 구분하는 연습으로 확장하세요.':'지문을 읽을 때 먼저 제목과 첫 문장으로 주제를 예측하고, 질문의 핵심어를 지문에서 찾아 밑줄 치는 훈련이 필요합니다. 수준에 맞는 리더스 1권을 주 2회 읽고 내용을 한 문장으로 요약해 보세요.'}`,
+   `추론 문제와 연결어(However, Because 등)의 역할을 묻는 문제는 앞뒤 문장의 관계를 따져 보는 연습이 중요합니다. 읽은 후 '왜?'를 묻는 질문에 답하는 활동을 곁들이면 논리적 관계 파악 능력이 자랍니다.`
+  ]),
+  writing: domText('writing', [
+   `${a.freeItem.graded?`자유 작문은 ${d.free.score}/9점입니다. ${d.free.feedback||''}`:'자유 작문은 아직 교사 채점 전입니다.'} 어순 배열과 형태 바꾸기 문항의 결과로 볼 때 ${a.dom.writing.autoPct>=70?'기본 문장 구조는 안정적입니다. 접속사로 두 문장을 연결하고 이유를 덧붙이는 연습으로 문장을 확장하세요.':'기본 어순(주어-동사-목적어)과 동사 형태 변화를 문장 쓰기로 반복 연습하는 것이 우선입니다.'}`,
+   `매일 영어 일기 2~3문장 쓰기를 권장합니다. 쓴 문장은 대문자·마침표·동사 형태를 스스로 점검하고, 주 1회 교사 첨삭을 받아 같은 실수를 줄여 나가세요.`
+  ])
+ };
+ const plan = [
+  {week:1, focus:'약점 항목 진단 복습', tasks:[`틀린 단어 ${Math.min(a.missedWords.length,15)}개 예문과 함께 정리 (월·수·금 15분)`, `틀린 문법 항목 개념 정리 및 기본 문제 각 10문항`, `수준 맞는 지문 2편 읽고 주제 한 문장 요약`]},
+  {week:2, focus:'어휘 확장 + 문법 적용', tasks:[`${(a.elemPct??100)<70?'초등 필수 어휘':'중학 필수 어휘'} 주제별 하루 10개 학습 (영영풀이로 확인)`, '문장 전환·오류 고치기 20문항', '영어 일기 3문장 × 3회']},
+  {week:3, focus:'독해 전략 훈련', tasks:['지문 3편: 핵심어 밑줄 → 문제 풀이 → 오답 이유 쓰기', '연결어(However, Because, So) 문장 만들기 10개', '어휘 누적 복습 테스트 1회']},
+  {week:4, focus:'종합 점검', tasks:['약점 항목 모의 문항 20개 재평가', '자유 작문 1편 작성 후 교사 첨삭', '4주 학습 내용 오답노트 정리 및 다음 목표 설정']}
+ ];
+ return { overall:`${n} 학생은 ${L.name}(${L.label}) 시험지에서 ${a.total}점을 받아 ${lvName(a.totalIdx)}으로 진단되었습니다. ${strongTags.length?`'${strongTags.slice(0,2).map(t=>t.label).join("', '")}' 항목이 강점이며, `:''}${weakTags.length?`'${weakTags.slice(0,2).map(t=>t.label).join("', '")}' 항목을 우선 보완하면 다음 단계로 올라갈 수 있습니다.`:'전 영역이 고르게 발달하고 있어 다음 레벨 도전을 권장합니다.'}`,
+  domains, plan, study_items: weakTags.map(t=>`[${DOMAINS[t.domain].label}] ${t.label}`), grammar_items: a.gps.filter(g=>g.ok<g.n).map(g=>g.gp+(g.csat?'':'')), by:'rule' };
+}
+
+async function generateAI(force){
+ const d = allDocs.find(x=>x.id===reportId); if(!d) return;
+ const a = analyze(d, allDocs);
+ const ai = ruleBasedAI(d, a); ai.createdAt = new Date().toISOString();
+ await updateDoc(d.id, {ai});
+ openReport(d.id);
+}
+
+// ═══════════════════════ INIT ═══════════════════════
+(function init(){
+ showScreen('landing');
+ tryResume();
+})();
+</script></body></html>
